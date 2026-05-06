@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hishion PPTs · 演示集合</title>
+<style>
+:root{
+  --bg:#fafbfc; --surface:#ffffff;
+  --border:rgba(10,37,64,.1); --border-strong:rgba(10,37,64,.2);
+  --text-1:#0a2540; --text-2:#425466; --text-3:#8898aa;
+  --accent:#1d4ed8;
+  --shadow:0 1px 3px rgba(10,37,64,.06),0 4px 12px rgba(10,37,64,.04);
+  --shadow-hover:0 6px 20px rgba(10,37,64,.1),0 12px 30px rgba(10,37,64,.06);
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text-1);
+  font-family:'Inter','Noto Sans SC',-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif;
+  font-weight:400;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+
+.container{max-width:1080px;margin:0 auto;padding:80px 40px 120px}
+
+.header{margin-bottom:64px}
+.kicker{font-family:'JetBrains Mono','SFMono-Regular',monospace;
+  font-size:13px;color:var(--accent);letter-spacing:.18em;
+  text-transform:uppercase;margin:0 0 18px}
+.title{font-size:56px;font-weight:800;line-height:1.1;
+  letter-spacing:-.025em;margin:0 0 16px;color:var(--text-1)}
+.subtitle{font-size:18px;color:var(--text-2);margin:0;max-width:60ch}
+
+.section-label{font-size:13px;font-weight:600;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--text-3);
+  margin:48px 0 20px;padding-bottom:12px;
+  border-bottom:1px solid var(--border)}
+
+.deck-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}
+
+.deck-card{display:block;background:var(--surface);
+  border:1px solid var(--border);border-radius:12px;
+  padding:28px 26px;box-shadow:var(--shadow);
+  transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  position:relative;overflow:hidden}
+.deck-card::before{content:"";position:absolute;left:0;top:0;
+  width:3px;height:100%;background:var(--accent);
+  opacity:0;transition:opacity .2s ease}
+.deck-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-hover);
+  border-color:var(--border-strong)}
+.deck-card:hover::before{opacity:1}
+
+.deck-card .badge{display:inline-block;font-size:11px;
+  font-family:'JetBrains Mono',monospace;
+  padding:3px 10px;border-radius:99px;
+  background:rgba(29,78,216,.08);color:var(--accent);
+  letter-spacing:.06em;margin-bottom:14px}
+.deck-card .badge.archived{background:rgba(133,153,170,.12);color:var(--text-3)}
+.deck-card h3{margin:0 0 8px;font-size:22px;font-weight:700;
+  letter-spacing:-.01em;line-height:1.3}
+.deck-card p{margin:0;font-size:14px;color:var(--text-2);line-height:1.6}
+.deck-card .meta{margin-top:16px;display:flex;gap:14px;
+  font-size:12px;color:var(--text-3);
+  font-family:'JetBrains Mono',monospace}
+.deck-card .meta span+span{padding-left:14px;border-left:1px solid var(--border)}
+
+.empty-card{background:transparent;border:1.5px dashed var(--border-strong);
+  display:flex;align-items:center;justify-content:center;
+  padding:36px 26px;color:var(--text-3);font-size:14px;
+  border-radius:12px;text-align:center;line-height:1.6}
+
+.footer{margin-top:80px;padding-top:32px;
+  border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:12px;color:var(--text-3);
+  font-family:'JetBrains Mono',monospace}
+
+.tip{margin-top:48px;padding:18px 22px;
+  background:var(--surface);border:1px solid var(--border);
+  border-left:3px solid var(--accent);
+  border-radius:0 8px 8px 0;font-size:13.5px;color:var(--text-2)}
+.tip strong{color:var(--text-1)}
+.tip code{background:rgba(10,37,64,.06);padding:2px 6px;border-radius:4px;
+  font-family:'JetBrains Mono',monospace;font-size:.92em}
+
+@media(max-width:600px){
+  .container{padding:48px 24px}
+  .title{font-size:36px}
+  .deck-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <p class="kicker">hishion-ppts · 演示集合</p>
+    <h1 class="title">演示文档导航</h1>
+    <p class="subtitle">基于 html-ppt-skill 制作的演示文档集合，统一资源、独立目录管理。键盘 <code style="background:rgba(10,37,64,.06);padding:2px 6px;border-radius:4px;font-family:monospace;font-size:.9em">S</code> 进入演讲者模式，<code style="background:rgba(10,37,64,.06);padding:2px 6px;border-radius:4px;font-family:monospace;font-size:.9em">←→</code> 翻页。</p>
+  </div>
+
+  <h2 class="section-label">已发布</h2>
+  <div class="deck-grid">
+
+    <a class="deck-card" href="shiwan-retrospective/index.html">
+      <span class="badge">2026 · CCAS</span>
+      <h3>赋码采集关联系统（石湾版）项目复盘</h3>
+      <p>从陌生接手到稳定交付：在信息不完整、生产风险高的现实约束下，把未知变已知，把经验变规则。</p>
+      <div class="meta">
+        <span>22 张 slide</span>
+        <span>presenter mode</span>
+        <span>corporate-clean</span>
+      </div>
+    </a>
+
+    <div class="empty-card">
+      下一份演示文档<br>预留位置
+    </div>
+
+  </div>
+
+  <div class="tip">
+    <strong>结构说明</strong>：所有 PPT 共享 <code>assets/</code> 目录下的字体、主题和 runtime；每份 PPT 独立子目录管理自己的 <code>index.html</code> 和 <code>style.css</code>。新增 PPT 时复制现有子目录作为模板即可。
+  </div>
+
+  <div class="footer">
+    <span>hishion-ppts · built with html-ppt-skill</span>
+    <span id="last-updated"></span>
+  </div>
+
+</div>
+
+<script>
+document.getElementById('last-updated').textContent =
+  'updated · ' + new Date().toISOString().slice(0,10);
+</script>
+
+</body>
+</html>

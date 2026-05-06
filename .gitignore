@@ -1,0 +1,15 @@
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
+
+.vscode/
+.idea/
+*.swp
+*.swo
+
+node_modules/
+.cache/
+
+out-png/
+*.png.bak

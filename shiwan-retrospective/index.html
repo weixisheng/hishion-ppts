@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-themes="corporate-clean,swiss-grid,minimal-white,tokyo-night">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>石湾赋码采集关联系统项目复盘</title>
+<link rel="stylesheet" href="../assets/fonts.css">
+<link rel="stylesheet" href="../assets/base.css">
+<link rel="stylesheet" id="theme-link" href="../assets/themes/corporate-clean.css">
+<link rel="stylesheet" href="../assets/animations/animations.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="tpl-presenter-mode-reveal">
+<div class="deck">
+
+<!-- 1. 封面 -->
+<section class="slide" data-title="封面">
+  <p class="kicker">project retrospective · 2026</p>
+  <h1 class="h1 anim-fade-up" data-anim="fade-up">赋码采集关联系统<span style="font-size:0.7em;font-weight:600;color:var(--text-2)">（石湾版）</span><br><span class="gradient-text">项目复盘</span></h1>
+  <p class="lede mt-m">从陌生接手到稳定交付：在信息不完整、生产风险高的现实约束下，把未知变已知，把经验变规则</p>
+  <div class="deck-footer">
+    <span class="mono">石湾产线 · CCAS V1.0 · 项目复盘</span>
+    <span class="slide-number" data-current="1" data-total="22"></span>
+  </div>
+  <aside class="notes">
+    <p>大家好，今天给大家做一次<strong>石湾赋码采集关联系统项目的完整复盘</strong>。</p>
+    <p>这个项目对我个人意义比较特殊——是我从全栈工程师正式转为产线项目负责人之后，主导落地的<em>第一个完整项目</em>。所以这次复盘，不只是讲做了什么，更想讲清楚<strong>从陌生到掌控的过程到底踩了哪些坑、做了哪些关键决策</strong>。</p>
+    <p>整场分享大约 30 到 40 分钟，分 10 个章节，从立项一直讲到交付后的反思。中间有几个我认为比较重要的决策点，我会重点展开，希望对后面同类项目有参考价值。</p>
+    <p>OK，我们开始。</p>
+  </aside>
+</section>
+
+<!-- 2. 议程 -->
+<section class="slide" data-title="议程">
+  <p class="kicker">agenda</p>
+  <h2 class="h2">今天要讲的 10 件事</h2>
+  <div class="stack mt-l">
+    <div class="agenda-row"><span class="num">01</span><span class="t">复盘目的：为什么要做这件事</span></div>
+    <div class="agenda-row"><span class="num">02</span><span class="t">项目概述：背景、目标与范围</span></div>
+    <div class="agenda-row"><span class="num">03</span><span class="t">交付结果与价值产出</span></div>
+    <div class="agenda-row"><span class="num">04</span><span class="t">关键过程：从陌生认知到方案体系化</span></div>
+    <div class="agenda-row"><span class="num">05</span><span class="t">关键挑战、决策与应对</span></div>
+    <div class="agenda-row"><span class="num">06</span><span class="t">部署、试运行与跟产复盘</span></div>
+    <div class="agenda-row"><span class="num">07</span><span class="t">AI 在本项目中的应用</span></div>
+    <div class="agenda-row"><span class="num">08</span><span class="t">核心问题根因与方法论沉淀</span></div>
+    <div class="agenda-row"><span class="num">09</span><span class="t">后续改进方向</span></div>
+    <div class="agenda-row"><span class="num">10</span><span class="t">结语 + Q&amp;A</span></div>
+  </div>
+  <aside class="notes">
+    <p>先快速过一下今天的议程，让大家有个心理预期。</p>
+    <p>前三块是<strong>"项目本身是什么"</strong>——目的、背景、交付结果，给没参与过这个项目的同事补背景。</p>
+    <p>第四到第六块是<strong>核心内容</strong>——关键过程、关键决策和现场跟产。这部分是真正"干货"，包括比如<em>为什么 1 号机最后没有替换</em>、<em>软硬件通信卡点是怎么突破的</em>、<em>跟产时遇到的密码、扫码枪问题怎么处理的</em>，这些都是后面同类项目能直接借鉴的内容。</p>
+    <p>第七块单独讲 AI——这个项目里 AI 用得很重，价值和边界都比较清晰，值得单独说。</p>
+    <p>最后三块是<strong>沉淀</strong>——根因、方法论、改进方向。回到为什么要做复盘的初衷。</p>
+    <p>有问题随时打断，我们开始第一部分。</p>
+  </aside>
+</section>
+
+<!-- 3. 复盘目的 -->
+<section class="slide" data-title="复盘目的">
+  <p class="kicker">// part 01 · why retrospect</p>
+  <h2 class="h2">这次复盘<span class="accent">不只是回顾</span>，<br>更是为了<span class="accent">沉淀机制</span></h2>
+  <div class="grid g3 mt-l">
+    <div class="card card-accent">
+      <h4>① 还原关键路径</h4>
+      <p class="dim">把"从陌生接手到稳定交付"的关键决策、卡点、突破过程梳理清楚，形成可复用的项目经验。</p>
+    </div>
+    <div class="card card-accent">
+      <h4>② 提炼改进方向</h4>
+      <p class="dim">系统总结流程、协同、方案、技术与现场实施层面暴露的问题，形成预防措施和优化建议。</p>
+    </div>
+    <div class="card card-accent">
+      <h4>③ 沉淀团队资产</h4>
+      <p class="dim">把个体经验逐步转化为团队可共享的规则、清单和方法，提升后续同类产线项目的交付成熟度。</p>
+    </div>
+  </div>
+  <div class="quote-block mt-l">
+    <p>把一次项目里的经验，转化成可复制的机制——这才是复盘真正产生价值的地方。</p>
+  </div>
+  <aside class="notes">
+    <p>复盘这件事很多人当成"汇报式回顾"，列一下做了什么、遇到了什么。但我想强调的是——<strong>复盘真正的目的是沉淀机制，而不是讲故事</strong>。</p>
+    <p>所以这次复盘有三个明确目标。<em>第一</em>，还原关键路径。这个项目从陌生到交付的过程比较复杂，有几个关键节点的判断决定了后面走向，我要把它讲清楚。</p>
+    <p><em>第二</em>，提炼改进方向。问题不是为了批评，而是为了提前预防。后面同类项目如果能少踩一个坑，复盘就值了。</p>
+    <p><em>第三</em>，沉淀团队资产。这个最重要——把<strong>个人经验转化成团队规则、清单、方法</strong>，让下个人接手类似项目不用再从零摸索。</p>
+    <p>底下这句话是我想送给大家的：复盘的价值不在于回顾，而在于<strong>把经验转化成机制</strong>。</p>
+  </aside>
+</section>
+
+<!-- 4. 项目概述 - 背景 -->
+<section class="slide" data-title="项目背景">
+  <p class="kicker">// part 02 · context</p>
+  <h2 class="h2">为什么要做新版采集软件</h2>
+  <div class="compare">
+    <div class="col bad">
+      <h5>▼ 历史问题</h5>
+      <ul>
+        <li>关键采集与关联逻辑由<strong>第三方主导</strong>，公司内部不完全掌握</li>
+        <li>问题响应受第三方排期影响，<strong>难以满足现场时效</strong></li>
+        <li>采集异常一旦影响生产，客户感知<strong>直接且负面</strong></li>
+        <li>历史逻辑、文档与现场实际行为之间存在<strong>信息断层</strong></li>
+      </ul>
+    </div>
+    <div class="col good">
+      <h5>▲ 直接契机：石湾纸箱重码事件</h5>
+      <ul>
+        <li>瓶/盒/箱/垛四级关联，问题在<strong>上传阶段才暴露</strong></li>
+        <li>纸箱重码导致大批量数据上传失败</li>
+        <li>旧软件<strong>缺乏前置校验和重码剔除</strong>能力</li>
+        <li>现场需拆封返工，效率与客户耐心被严重消耗</li>
+      </ul>
+    </div>
+  </div>
+  <p class="lede mt-l">石湾项目是公司"产线软件能力外部化"问题的<span class="accent">集中体现</span>，也是推动新版自研采集软件落地的<span class="accent">直接契机</span>。</p>
+  <aside class="notes">
+    <p>先讲清楚为什么要做这个项目。</p>
+    <p>左边这一栏是<strong>长期存在的结构性问题</strong>——公司在一物一码业务上一直要给客户做生码、赋码、产线采集关联，但很多产线项目的采集软件由第三方提供。这就导致<em>核心能力受制于人、响应慢、出问题时客户直接对我们不满</em>。这是个老问题。</p>
+    <p>右边这一栏是<strong>把矛盾彻底引爆的事件</strong>——石湾产线的纸箱重码问题。瓶、盒、箱、垛四级关联，旧软件没有前置校验，重码问题要等到数据上传那一刻才暴露。这意味着什么？意味着<em>码垛后的纸箱要被搬下来、拆封、返工</em>。生产效率掉一大截，客户看在眼里。</p>
+    <p>所以下面这句话是关键——石湾项目不是某个孤立问题，它是<strong>公司产线软件能力外部化这个老问题的集中爆发</strong>。也正因为它够痛，才推动了新版自研软件落地。</p>
+  </aside>
+</section>
+
+<!-- 5. 项目目标与范围 -->
+<section class="slide" data-title="项目目标与范围">
+  <p class="kicker">// part 02 · goals &amp; scope</p>
+  <h2 class="h2">从"理想方案"到<span class="accent">"可落地方案"</span></h2>
+  <div class="grid g2 mt-l">
+    <div class="list-card">
+      <h4>核心目标（5 项）</h4>
+      <ul>
+        <li>替换旧版采集关键能力，提升<strong>自主可控</strong>程度</li>
+        <li>完善异常识别、剔除、报警、上传等核心闭环</li>
+        <li>问题从"上传后暴露"<strong>前移</strong>到"采集/关联阶段识别"</li>
+        <li>不显著增加操作负担的前提下，优化现场使用体验</li>
+        <li>沉淀产线项目<strong>调研→方案→联调→部署→SOP</strong>的可复用经验</li>
+      </ul>
+    </div>
+    <div class="list-card">
+      <h4>项目范围（关键决策）</h4>
+      <ul>
+        <li><strong>1 号机</strong>：保留旧版，继续负责瓶盒关联</li>
+        <li><strong>2 号机</strong>：上线新版，承接盒箱垛核心闭环</li>
+        <li>通过同步/拉取 1 号机数据，建立后续关联校验</li>
+        <li>分阶段替换 ≠ 妥协，是<span class="accent">主动控制风险</span>的范围决策</li>
+      </ul>
+    </div>
+  </div>
+  <p class="lede mt-l">石湾产线 <span class="accent">2 台工控机</span>：1 号机瓶盒关联与电眼/裹包机联动深，信号信息不透明 → 不贸然替换。</p>
+  <aside class="notes">
+    <p>讲完背景，看具体目标和范围。</p>
+    <p>左边是<strong>核心目标 5 项</strong>。重点不是单纯替换软件，而是把"<em>异常发现过晚</em>"这个结构性问题往前移——以前在数据上传那一刻才发现，现在要在采集和关联阶段就识别。这是质的变化。</p>
+    <p>同时也要沉淀方法论。这是个里程碑项目，做完之后下一条产线接得上，能力才算真的落地。</p>
+    <p>右边是<strong>范围决策</strong>，这里有个非常关键的判断——<strong>1 号机最终不替换、只替换 2 号机</strong>。这个决策我后面会专门展开讲。</p>
+    <p>大家可以先记住一个原则：在产线项目里，<em>"看起来完整"和"真正可交付"经常是冲突的</em>。最终我们选择了后者——主动放弃 1 号机，先把 2 号机做扎实。事实证明这是整个项目最重要的几个正确决策之一。</p>
+  </aside>
+</section>
+
+<!-- 6. 个人职责 -->
+<section class="slide" data-title="个人职责">
+  <p class="kicker">// part 02 · my role</p>
+  <h2 class="h2">从"开发视角"切换到<span class="accent">"项目负责视角"</span></h2>
+  <div class="grid g4 mt-l">
+    <div class="card card-accent">
+      <h4>项目调研</h4>
+      <p class="dim">背景梳理 · 历史问题收集 · 需求沟通 · 现场调研</p>
+    </div>
+    <div class="card card-accent">
+      <h4>方案设计</h4>
+      <p class="dim">产品方案文档 · UI/交互设计 · 边界规则梳理</p>
+    </div>
+    <div class="card card-accent">
+      <h4>开发联调</h4>
+      <p class="dim">部分开发实现 · 联调支持 · 测试问题跟进</p>
+    </div>
+    <div class="card card-accent">
+      <h4>实施跟产</h4>
+      <p class="dim">现场部署 · 试运行 · 跟产响应 · SOP 输出</p>
+    </div>
+  </div>
+  <div class="quote-block mt-l">
+    <p>这是我从<strong>全栈工程师</strong>正式转为<strong>产线项目负责人</strong>之后，主导落地的<strong>第一个完整赋码采集关联系统项目</strong>。</p>
+  </div>
+  <aside class="notes">
+    <p>这一页讲我自己在项目里的角色。我个人覆盖了<strong>从背景梳理到 SOP 输出的几乎全过程</strong>——左到右四个阶段都参与了。</p>
+    <p><strong>① 项目调研</strong>——背景梳理、历史问题收集、需求沟通、现场调研。这一步决定了我对产线项目的<em>第一手认知</em>，能不能跳出"软件视角"也是从这里开始。</p>
+    <p><strong>② 方案设计</strong>——产品方案文档、UI 与交互设计、边界规则梳理。这一步是把零散的认知<em>变成可执行表达</em>的关键。</p>
+    <p><strong>③ 开发联调</strong>——部分开发实现、联调支持、测试问题跟进。我没有全程写代码，但<em>关键链路、卡点、性能优化都跟到了一线</em>。</p>
+    <p><strong>④ 实施跟产</strong>——现场部署、试运行、跟产响应、SOP 输出。这一步最重要——<em>不到这一步，前面所有工作都不算真正交付</em>。</p>
+    <p>说这个不是为了讲我做了多少事，而是想说一个事实——<strong>这四块没有一块是可以在办公室凭空想清楚的</strong>，每一块都需要走出去、问下来、看见、动手。心态层面有个明显切换，不过这个切换最后我会专门展开（第 22 页结语会再说），现在先按下不表。</p>
+    <p>下面这句话是我自己的标记：<strong>这是我转角色之后主导的第一个完整项目</strong>。也正因为是第一个，所以踩了不少坑、也建立了一些判断。下面我会把这些判断分享给大家。</p>
+    <p>OK，背景部分就讲到这里，接下来看交付结果。</p>
+  </aside>
+</section>
+
+<!-- 7. 交付结果 -->
+<section class="slide" data-title="交付结果">
+  <p class="kicker">// part 03 · delivery</p>
+  <h2 class="h2">交付了什么</h2>
+  <div class="kpi-row">
+    <div class="kpi"><div class="num">2号机</div><div class="label">新版软件全量替换</div></div>
+    <div class="kpi"><div class="num">5+</div><div class="label">关键设备通信打通</div></div>
+    <div class="kpi"><div class="num">6-8s</div><div class="label">启动时间（从 25s 优化）</div></div>
+    <div class="kpi"><div class="num">100%</div><div class="label">SOP 与培训覆盖</div></div>
+  </div>
+  <div class="grid g2 mt-l">
+    <div class="list-card">
+      <h4>软件层面</h4>
+      <ul>
+        <li>新版采集软件<strong>整体方案设计</strong>完成</li>
+        <li>2 号机盒箱垛关联、异常校验、剔除、报警、上传<strong>核心闭环</strong>实现</li>
+        <li>开机性能、Win7 工控机兼容性、UI 交互逐项打磨</li>
+      </ul>
+    </div>
+    <div class="list-card">
+      <h4>硬件与现场</h4>
+      <ul>
+        <li>相机、扫码枪、PLC 继电器、报警灯、剔除装置<strong>全链路通信打通</strong></li>
+        <li>完成现场<strong>部署 → 试运行 → 正式生产跟产</strong></li>
+        <li>输出操作指导文档，支撑工厂后续持续使用</li>
+      </ul>
+    </div>
+  </div>
+  <p class="lede mt-l">系统在正式生产中<span class="accent">整体运行稳定</span>，问题集中于交互细节、参数适配，均已快速修正。</p>
+  <aside class="notes">
+    <p>这一页讲交付结果。我直接把几个关键数字摆在最上面——</p>
+    <p><strong>2 号机</strong>新版软件全量替换、<strong>5 个以上</strong>关键设备的通信打通、启动时间从初期的 25 秒优化到<strong>4 到 5 秒</strong>、SOP 和培训<strong>100% 覆盖</strong>。</p>
+    <p>下面分两块——<em>软件层面</em>方案、核心闭环、性能和兼容都搞定了；<em>硬件与现场</em>是相机、扫码枪、报警灯、剔除装置全链路打通，并且完成了从部署到正式跟产的完整闭环。</p>
+    <p>底下这句话很重要——<strong>正式生产中整体运行稳定</strong>。问题主要集中在交互细节和参数微调，都在现场快速修复了。也就是说，这个项目从"做完"到"用上"是真的接住了，没有出现"上线一周返工"的情况。这一点是值得记一笔的。</p>
+  </aside>
+</section>
+
+<!-- 8. 业务与组织价值 -->
+<section class="slide" data-title="价值产出">
+  <p class="kicker">// part 03 · value</p>
+  <h2 class="h2">这个项目的<span class="accent">三层价值</span></h2>
+  <div class="grid g3 mt-l">
+    <div class="card card-accent">
+      <h4>① 业务价值</h4>
+      <p class="dim">提升产线采集关联自主可控；降低对第三方依赖；异常前移识别减少返工成本；改善现场处理效率与体验；恢复客户对系统稳定性的信心。</p>
+    </div>
+    <div class="card card-accent">
+      <h4>② 组织能力</h4>
+      <p class="dim">首次完整沉淀<strong>调研→交付</strong>关键路径；验证<strong>统一代码 + 配置适配</strong>产品化思路；建立"方案—开发—测试—实施—SOP"闭环认知。</p>
+    </div>
+    <div class="card card-accent">
+      <h4>③ 知识资产</h4>
+      <p class="dim">积累 AI 在<strong>陌生认知、文档生成、UI、测试模拟、技术分析</strong>中的实际应用经验；个人经验开始转化为结构化文档与可复用规则。</p>
+    </div>
+  </div>
+  <div class="compare mt-l">
+    <div class="col bad">
+      <h5>▼ 当前边界</h5>
+      <ul>
+        <li>1 号机瓶盒关联未彻底替换，仍依赖旧版</li>
+        <li>部分现场管理问题需工厂配合规范（码包导入、物料管理等）</li>
+      </ul>
+    </div>
+    <div class="col good">
+      <h5>▲ 本质交付</h5>
+      <ul>
+        <li>不追求一次性全量重构</li>
+        <li>在有限信息和真实约束下，优先完成<strong>最关键、最可控的闭环</strong></li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes">
+    <p>价值这一块我分三层来讲——</p>
+    <p><em>第一层是业务价值</em>。这个最直接：自主可控提升了、第三方依赖降了、异常前移减少返工、客户信心也开始恢复。</p>
+    <p><em>第二层是组织能力</em>。这一层我个人最看重——这个项目<strong>第一次完整沉淀了从调研到交付的全路径</strong>，并且验证了"<em>统一代码 + 配置适配</em>"的产品化思路是走得通的。也就是说不同产线之间不需要每个都开一套独立分支，可以靠配置承接差异。这对后续多产线扩展是关键基础。</p>
+    <p><em>第三层是知识资产</em>。AI 在这个项目里用得很重，把以前散落在个人脑子里的经验，开始结构化下来。这个会是后面的复利。</p>
+    <p>下面也要诚实讲<strong>边界</strong>——1 号机没替换、码包导入这类管理问题还需要工厂配合。但这恰恰是我想强调的——<em>这次交付的本质是"在约束下做关键闭环"，不是"一次性重构"</em>。这两种思路差别很大。</p>
+  </aside>
+</section>
+
+<!-- 9. 关键过程 1 -->
+<section class="slide" data-title="关键过程 · 陌生到认知">
+  <p class="kicker">// part 04 · process [1/5]</p>
+  <h2 class="h2">从陌生接手到<span class="accent">建立基本认知</span></h2>
+  <p class="lede">最大的困难不是开发实现，而是<span class="accent">认知基础不足</span>。</p>
+  <div class="timeline">
+    <div class="timeline-item"><div class="dot"></div><div><h6>梳理历史文档与现场反馈</h6><p>把过往问题记录、旧版软件说明逐项核对，找出文档与实际行为不一致的地方。</p></div></div>
+    <div class="timeline-item"><div class="dot"></div><div><h6>对照旧版软件功能逐项核实</h6><p>不只是看 UI，更要确认每个功能"为什么存在、何时使用、是否仍有价值"。</p></div></div>
+    <div class="timeline-item"><div class="dot"></div><div><h6>持续向熟悉业务的同事请教</h6><p>设备、产线、实施、现场使用的同事，每个角色都问到位。</p></div></div>
+    <div class="timeline-item"><div class="dot"></div><div><h6>到工厂现场观察真实运转</h6><p>理解"软件动作"对应的"实际物理动作"，把抽象逻辑落到具体场景。</p></div></div>
+    <div class="timeline-item"><div class="dot"></div><div><h6>把学习过程整理成在线记录</h6><p>避免重复从零理解，让认知可被沉淀和共享。</p></div></div>
+  </div>
+  <div class="quote-block mt-m">
+    <p>本质不是"学知识"，而是把模糊、零散、依赖他人的信息，<strong>组织成可以用于判断和决策的认知框架</strong>。</p>
+  </div>
+  <aside class="notes">
+    <p>接下来进入第四部分——关键过程。我想分 5 张片把这个过程讲清楚，因为<strong>过程本身就是这个项目最值得分享的部分</strong>。</p>
+    <p>第一步是建立基本认知。我接手项目的时候，对产线项目涉及的<em>业务模式、设备构成、流程链路、异常场景、操作习惯</em>几乎都不熟。如果直接写代码，很容易做出"逻辑没错但脱离现场"的方案。</p>
+    <p>所以一开始我做的不是开发，而是<strong>5 件事</strong>，每件都很重要：</p>
+    <p><strong>① 梳理历史文档与现场反馈</strong>——把过往问题记录、旧版软件说明逐项核对，<em>找出"文档怎么写"和"实际怎么跑"不一致的地方</em>。这一步会暴露出大量隐性问题。</p>
+    <p><strong>② 对照旧版软件功能逐项核实</strong>——不只是看 UI，更要确认每个功能"<em>为什么存在、何时使用、是否仍有价值</em>"。很多按钮看起来没用，其实工厂还在依赖。</p>
+    <p><strong>③ 持续向熟悉业务的同事请教</strong>——设备、产线、实施、现场使用的同事，<em>每个角色都问到位</em>。单一来源的信息一定有偏差，多角色印证才靠谱。</p>
+    <p><strong>④ 到工厂现场观察真实运转</strong>——理解"<em>软件动作"对应的"实际物理动作</em>"。这一步只能去现场，办公室想象不出来。</p>
+    <p><strong>⑤ 把学习过程整理成在线记录</strong>——避免重复从零理解，也让团队后续接手的同事能<em>站在我已经踩过的坑上往前走</em>。</p>
+    <p>大家看底下这句话——这是我自己的总结：<strong>这个阶段不是学知识，而是把零散的信息组织成判断框架</strong>。这个框架建立起来之后，后面所有方案设计、技术决策才有依托。</p>
+    <p>这一步我不建议跳过。短期看是"没产出"，但是后面所有的快，都是因为这个慢。</p>
+  </aside>
+</section>
+
+<!-- 10. 关键过程 2 -->
+<section class="slide" data-title="关键过程 · 功能到场景">
+  <p class="kicker">// part 04 · process [2/5]</p>
+  <h2 class="h2">从"功能理解"<br>转向<span class="accent">"场景理解"</span></h2>
+  <div class="compare">
+    <div class="col bad">
+      <h5>▼ 旧路径：功能罗列</h5>
+      <ul>
+        <li>看按钮、看页面，<strong>不知道为什么存在</strong></li>
+        <li>取消关联功能拆成两个入口，看不出意图</li>
+        <li>"无需采集码"按钮看似无用，实则现场要</li>
+        <li>低频功能带缺陷却仍带入新版</li>
+      </ul>
+    </div>
+    <div class="col good">
+      <h5>▲ 新路径：场景驱动</h5>
+      <ul>
+        <li>从"<strong>现场有哪些真实场景需要被支撑</strong>"出发</li>
+        <li>结合使用习惯、异常处理、数据结构来判断</li>
+        <li>形成清晰的<strong>取舍原则</strong></li>
+      </ul>
+    </div>
+  </div>
+  <div class="grid g2 mt-l">
+    <div class="list-card">
+      <h4>取舍原则</h4>
+      <ul>
+        <li>高频且关键 → <strong>重点保留并优化</strong></li>
+        <li>低频但有价值 → <strong>保留，重新设计</strong></li>
+        <li>长期不用且有问题 → <strong>暂不进入新版</strong></li>
+        <li>能交互整合的 → <strong>优先合并简化</strong></li>
+      </ul>
+    </div>
+    <div class="list-card">
+      <h4>核心收获</h4>
+      <ul>
+        <li>工业软件设计不能只围绕"<strong>功能项</strong>"</li>
+        <li>必须围绕"<strong>现场问题如何发生、被发现、被处理</strong>"</li>
+        <li>"功能视角"会复制旧版毛病；"场景视角"才能真正改善</li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes">
+    <p>第二步是认知模式的切换——<strong>从看功能转向看场景</strong>。</p>
+    <p>左边讲我一开始踩的坑——纯看旧版按钮和页面，根本搞不懂为什么这么设计。比如"取消关联"被拆成两个入口；比如有个"<em>无需采集码</em>"的按钮看着像废功能，但工厂实际就是要靠它走某个流程。</p>
+    <p>右边是修正后的方法——<strong>从现场真实场景出发</strong>。这一切换之后，方案设计就有了清晰的<strong>4 条取舍原则</strong>：</p>
+    <p><strong>① 高频且关键 → 重点保留并优化</strong>。这种功能是产线每天都要用的，必须做到顺手，连一次多余点击都要省掉。</p>
+    <p><strong>② 低频但有价值 → 保留并重新设计</strong>。低频不等于没价值，但<em>原来的设计大概率不合理</em>，借这次机会重新做。</p>
+    <p><strong>③ 长期不用且有问题 → 暂不进入新版</strong>。这是最容易犯的错——舍不得砍。但你带进来一堆没人用的功能，反而<em>增加新版的复杂度和维护成本</em>。</p>
+    <p><strong>④ 能交互整合的 → 优先合并简化</strong>。比如取消关联那两个入口最终合成一个，工人少想一步、少点一下，体验立刻不一样。</p>
+    <p>下面这句话是我自己反复体会的——<strong>工业软件设计不能围绕"功能项"，必须围绕"现场问题如何发生、被发现、被处理"</strong>。前者是开发视角，后者是产线视角。差一个视角，方案的味道就完全不一样。</p>
+  </aside>
+</section>
+<!-- 11. 关键过程 3 -->
+<section class="slide" data-title="关键过程 · 设备认知补课">
+  <p class="kicker">// part 04 · process [3/5]</p>
+  <h2 class="h2">设备与流程认知的<span class="accent">补课</span></h2>
+  <p class="lede">软件要在产线上稳定运行，<span class="accent">不能只懂业务，也必须懂设备</span>。</p>
+  <div class="grid g2 mt-l">
+    <div class="list-card">
+      <h4>设备通信认知补充</h4>
+      <ul>
+        <li>相机：通信方式、采集触发、数据格式</li>
+        <li>扫码枪：串口参数与输入方式</li>
+        <li>报警灯：信号对应的灯色、蜂鸣、持续时长</li>
+        <li>剔除装置：触发信号、动作时序、收回逻辑</li>
+        <li>PLC / 继电器：链路中的中间控制作用</li>
+      </ul>
+    </div>
+    <div class="list-card">
+      <h4>石湾产线运行模式</h4>
+      <ul>
+        <li><strong>1 号机</strong>：瓶盒关联，多相机协同采集，向 2 号机同步数据</li>
+        <li><strong>2 号机</strong>：盒箱垛关联，龙门架处采集与异常剔除</li>
+        <li>满垛上传后，按上传成功/失败<strong>触发不同报警</strong>表现</li>
+      </ul>
+    </div>
+  </div>
+  <div class="quote-block mt-l">
+    <p>这一过程虽然不是直接产出代码，却<strong>决定了后续方案边界、调试方式和实施顺序</strong>——是从"做软件"转向"做产线项目"的重要一步。</p>
+  </div>
+  <aside class="notes">
+    <p>第三步是设备和流程的补课。</p>
+    <p>这块我一开始很容易忽视——觉得我们公司不部署硬件，那理解软件就够了。后来发现这是<strong>致命误区</strong>。采集软件必须跟相机、扫码枪、PLC、报警灯、剔除装置协同工作，<em>每一类都要专门补课</em>：</p>
+    <p><strong>① 相机</strong>——通信方式（TCP/IP）、采集触发条件、返回数据格式。要搞清楚<em>什么时候发什么数据回来</em>，否则采集逻辑就写不准。</p>
+    <p><strong>② 扫码枪</strong>——串口参数（波特率/校验位）、输入方式（键盘模拟还是串口数据）。这个看似简单，但参数不对就是收不到数据。</p>
+    <p><strong>③ 报警灯</strong>——不同信号对应不同灯色、蜂鸣方式、持续时长。<em>"上传成功"和"上传失败"必须有明显区分</em>，工人才能远远一看就知道。</p>
+    <p><strong>④ 剔除装置</strong>——触发信号、动作时序、收回逻辑。最难的不是发信号，是<em>怎么算准产线节拍，让剔除动作落在该剔的那个箱上</em>。</p>
+    <p><strong>⑤ PLC / 继电器</strong>——这是整条链路的中间控制器。报警灯、剔除装置都不是软件直接驱动，而是<em>软件 → PLC/继电器 → 设备</em>。这个链路搞不清，后面全是黑盒。</p>
+    <p>右边是补完之后对石湾产线运行模式的认识——1 号机和 2 号机的分工、上传成功失败分别对应的报警表现。这种"<em>看到现象就知道哪一步出问题</em>"的能力，对后续现场跟产帮助巨大。</p>
+    <p>底下这句话很关键——<strong>这个过程不直接产出代码，但它决定了后续方案的边界、调试的方式和实施的顺序</strong>。换句话说，<em>从"做软件"转向"做产线项目"，必须迈过这一步</em>。</p>
+  </aside>
+</section>
+
+<!-- 12. 关键过程 4 -->
+<section class="slide" data-title="关键过程 · 方案体系化">
+  <p class="kicker">// part 04 · process [4/5]</p>
+  <h2 class="h2">产品方案设计：<span class="accent">从零散理解到体系化表达</span></h2>
+  <div class="grid g2 mt-l">
+    <div class="list-card">
+      <h4>主要工作</h4>
+      <ul>
+        <li>梳理整体主文档：背景、目标、规则、设计框架</li>
+        <li>输出子页面文档：细化两套软件的页面与交互</li>
+        <li>抽离<strong>通用规则</strong>，形成可复用基础</li>
+        <li>结合 UI / 交互原型，减少纯文字理解偏差</li>
+      </ul>
+    </div>
+    <div class="list-card">
+      <h4>方案设计的 3 个典型问题</h4>
+      <ul>
+        <li>① 易被旧系统逻辑牵引（取消关联多次改版）</li>
+        <li>② 主流程容易，<strong>边界规则容易遗漏</strong>（输入限制、参数范围、状态切换）</li>
+        <li>③ 文档多处维护：仓库 + 语雀 + PRD.Agent <strong>同步风险</strong></li>
+      </ul>
+    </div>
+  </div>
+  <div class="quote-block mt-l">
+    <p>方案不是按"<strong>一次性项目</strong>"做，而是从一开始就向<strong>产品化、标准化</strong>靠拢——为后续更多产线接入做准备。</p>
+  </div>
+  <aside class="notes">
+    <p>有了认知基础，进入方案设计阶段。</p>
+    <p>左边这块讲<strong>主要做了什么</strong>——主文档、子页面文档、通用规则抽离、UI 原型联动。<em>这套结构本身值得保留</em>，后面同类项目可以直接复用。</p>
+    <p>右边这块讲<strong>3 个真实踩过的坑</strong>——</p>
+    <p>第一，<em>方案容易被旧系统逻辑牵引</em>。比如取消关联，旧版有两个入口，新版改了好几版才确定真正合理的交互。这是因为缺少成熟参照物，下意识就会模仿旧版。</p>
+    <p>第二，<em>主流程容易做，但边界规则容易遗漏</em>——输入框限制、参数范围、状态切换条件、异常提示——这些恰恰是开发返工和测试问题的主要来源。</p>
+    <p>第三，<em>文档多处维护带来的同步风险</em>。代码仓库、语雀、PRD.Agent 三处都有，改了一处忘了另一处，版本立刻不一致。这个最终我们靠把场景、规则、异常、边界统一收敛到 PRD.Agent 来缓解。</p>
+    <p>下面这句话是大方向——<em>这个项目的方案从一开始就不是按一次性项目做，而是按产品化方向做</em>。</p>
+  </aside>
+</section>
+
+<!-- 13. 关键过程 5 -->
+<section class="slide" data-title="关键过程 · UI 与交互">
+  <p class="kicker">// part 04 · process [5/5]</p>
+  <h2 class="h2">工业软件：<span class="accent">"顺手"</span> &gt; "炫目"</h2>
+  <div class="compare">
+    <div class="col bad">
+      <h5>▼ 工业软件设计中不重要的</h5>
+      <ul>
+        <li>视觉表现是否前卫</li>
+        <li>动效是否丰富</li>
+        <li>主题切换 / 暗黑模式</li>
+        <li>"看着设计感强"</li>
+      </ul>
+    </div>
+    <div class="col good">
+      <h5>▲ 工业软件真正重要的 5 件事</h5>
+      <ul>
+        <li>操作路径是否<strong>短</strong></li>
+        <li>状态信息是否<strong>清晰</strong></li>
+        <li>错误是否容易<strong>及时发现</strong></li>
+        <li>高频动作是否<strong>顺手</strong></li>
+        <li>是否贴近现场<strong>既有使用习惯</strong></li>
+      </ul>
+    </div>
+  </div>
+  <div class="quote-block mt-l">
+    <p>工业软件中，交互设计<strong>不是附属工作</strong>，而是<strong>交付质量的重要组成</strong>。"好看"影响有限，"好用、少点几下、少想一步"会直接影响工人接受度和生产节奏。</p>
+  </div>
+  <aside class="notes">
+    <p>方案设计的最后一块——UI 与交互。这一块我重新认识了一件事：<strong>工业软件的设计原则跟常规业务系统完全不同</strong>。</p>
+    <p>左边那些视觉前卫、动效丰富、暗黑模式——在产线场景下基本不重要，甚至可能反向干扰工人。</p>
+    <p>右边这 5 件事才是真正重要的，每件都直接影响生产节奏：</p>
+    <p><strong>① 操作路径是否短</strong>——产线工人没时间学复杂操作。<em>3 步能完成的事，绝不能做成 5 步</em>。</p>
+    <p><strong>② 状态信息是否清晰</strong>——产线在跑，工人没法停下来研究界面。<em>当前是采集中、是异常、还是已上传，必须一眼可见</em>。</p>
+    <p><strong>③ 错误是否容易及时发现</strong>——异常如果是隐性提示，工人 10 分钟后才注意到，那就是 10 分钟的废品。<em>异常必须用颜色、声音、弹窗强提醒</em>。</p>
+    <p><strong>④ 高频动作是否顺手</strong>——一个班次工人可能要重复几百次同一个操作。<em>每减少一次点击，全班节省的时间就是几百次累计</em>。</p>
+    <p><strong>⑤ 是否贴近现场既有习惯</strong>——这一条最容易被忽视。哪怕你的设计在理论上更合理，但如果跟工人原来的操作习惯差太远，<em>抵触和误操作率会同时上升</em>。能贴近就贴近。</p>
+    <p>这 5 件事看着抽象，但每一条我们都做了对应的具体优化——<em>跟产那一页（第 18 页）会讲几个真实案例</em>，从工人的反馈来看，<strong>这些"少一步"的细节比任何花哨设计都更受欢迎</strong>。</p>
+    <p>下面这句话是我对工业软件设计的判断——<strong>交互设计不是附属工作，是交付质量的核心组成部分</strong>。<em>"好看"影响有限，"好用、少点几下、少想一步"才直接影响生产节奏</em>。</p>
+    <p>OK，关键过程这部分讲完。下面进入更精彩的——关键挑战和决策。</p>
+  </aside>
+</section>
+
+<!-- 14. 关键决策 1 -->
+<section class="slide" data-title="决策 · 1号机不替换">
+  <p class="kicker">// part 05 · key decision [1/3]</p>
+  <h2 class="h2">最大的范围决策：<br><span class="accent">"主动放弃 1 号机"</span></h2>
+  <div class="grid g2 mt-l">
+    <div class="list-card">
+      <h4>1 号机为什么"不能简单替换"</h4>
+      <ul>
+        <li>瓶盒关联模式<strong>非顺序采集</strong>，先采多组瓶、间隔后采盒</li>
+        <li>结合<strong>电眼信号</strong>判断实际装盒情况</li>
+        <li>抽出异常瓶组就可能数据错乱</li>
+        <li>与现场设备联动深、依赖电眼控制信号</li>
+        <li>算法和真实触发条件<strong>不透明</strong>，硬件非我方部署</li>
+      </ul>
+    </div>
+    <div class="list-card">
+      <h4>决策结果</h4>
+      <ul>
+        <li>暂不替换 1 号机，<strong>保留旧版</strong>瓶盒关联</li>
+        <li>先替换 2 号机，完成<strong>盒箱垛核心闭环</strong></li>
+        <li>通过拉取 1 号机数据进行后续校验关联</li>
+        <li>主动放弃"<strong>表面上的完整</strong>"，换取"<strong>现实中的可交付</strong>"</li>
+      </ul>
+    </div>
+  </div>
+  <div class="quote-block mt-l">
+    <p>1 号机后续是否替换，前提<strong>不是"时间到了"</strong>，而是"<strong>关键信息齐了、验证条件具备了</strong>"——等第二条产线硬件部署完成、电眼信号补齐后再启动。</p>
+  </div>
+  <aside class="notes">
+    <p>这页是整个项目<strong>最重要的几个决策之一</strong>——主动放弃 1 号机替换。</p>
+    <p>项目原本的目标是 1 号机 + 2 号机全部换掉。但分析下来发现 1 号机的瓶盒关联在我们 20 多条产线里<em>非常特殊</em>——它不是按顺序采集瓶、盒，而是先采多组瓶、间隔之后再采盒，还要结合电眼信号判断真实装盒情况。中间一旦抽走异常瓶组，数据就乱了。</p>
+    <p>更要命的是，这套逻辑<em>跟现场设备联动深、依赖电眼信号、算法不透明、硬件不是我方部署的</em>。换句话说，强行替换的话，<strong>我们没有足够信息去保证不出问题</strong>。</p>
+    <p>所以决策结果就是右边——保留 1 号机旧版、先把 2 号机做扎实、通过同步数据建立校验。</p>
+    <p>这个决策最难的不是技术判断，是心态——<strong>主动放弃"看起来完整"，去换"现实中可交付"</strong>。事实证明这个判断是对的。</p>
+    <p>下面这句话也很重要——<em>1 号机不是不能换，是现阶段还不具备安全替换条件</em>。等条件齐了再说，不要被"时间表"裹挟。</p>
+    <p>补充一点——这个判断已经被写进 <strong>CCAS V1.0 整体规划</strong>了。规划里明确：<em>石湾 1 号机暂缓替换</em>，条件是<strong>第二条产线签订、硬件部署完成、电眼信号补齐</strong>之后再启动评估。也就是说这<em>不是我个人判断，是产品规划层面已经达成共识的方向</em>。后面第 21 页讲规划方向时，大家会看到完整的存量切换路线图。</p>
+  </aside>
+</section>
+
+<!-- 15. 关键挑战 2 -->
+<section class="slide" data-title="挑战 · 软硬件通信">
+  <p class="kicker">// part 05 · key challenge [2/3]</p>
+  <h2 class="h2">实施层最大卡点：<br><span class="accent">软硬件通信信息不透明</span></h2>
+  <div class="grid g2 mt-l">
+    <div class="list-card">
+      <h4>分层突破策略</h4>
+      <ul>
+        <li>① 先确认<strong>确定性高</strong>的设备通信（相机、扫码枪）</li>
+        <li>② 持续向第三方索要<strong>最小可用信息</strong>（继电器接线 + 真实示例数据）</li>
+        <li>③ 借 AI 做<strong>结构化分析与多模型交叉验证</strong>，推演完整通信</li>
+        <li>④ 带着假设去现场验证，<strong>避免盲试</strong></li>
+      </ul>
+    </div>
+    <div class="list-card">
+      <h4>突破后的通信打通清单</h4>
+      <ul>
+        <li>盒码相机 / 箱码相机</li>
+        <li>报警灯（颜色、蜂鸣、时长）</li>
+        <li>剔除装置（信号触发 → 时序校准）</li>
+        <li>PLC / 继电器中转链路</li>
+      </ul>
+    </div>
+  </div>
+  <div class="quote-block mt-l">
+    <p>后续原则：<strong>硬件可以由客户/第三方采购，但凡软件需要直接交互的设备，必须提供可验证的接口配置清单</strong>——没有清单，就只能边试边猜。</p>
+  </div>
+  <aside class="notes">
+    <p>第二个挑战是<strong>软硬件通信信息不透明</strong>。这个不是范围问题，是实施层最直接的卡点。</p>
+    <p>项目初期，我们能确认的就是相机用 TCP、扫码枪用串口。但报警灯、剔除装置这些要通过 PLC 和继电器中转的，<em>协议、接线、信号定义几乎没有成型资料</em>。</p>
+    <p>我们用了一个<strong>分层突破的方法</strong>——</p>
+    <p><em>第一</em>，先把确定性高的部分搞定，先有进展。<em>第二</em>，反复跟第三方要资料，最终拿到了一份继电器接线说明加示例数据，这是关键转折点。<em>第三</em>，把这些资料喂给 AI，做结构化分析、多模型交叉验证，推演出完整通信方案。<em>第四</em>，<strong>带着假设去现场验证，而不是空手到现场盲试</strong>——这个差别巨大，可以省掉一半以上的现场调试时间。</p>
+    <p>右边是最终打通的清单。注意剔除装置，是先验证信号触发、再校准实际剔除时序，分两步走的。</p>
+    <p>底下这句话是给后续项目的标准——<strong>硬件可以不是我们的，但接口配置清单必须给</strong>。没清单的项目，排期都带巨大不确定性。</p>
+  </aside>
+</section>
+
+<!-- 16. 开发测试 + Java 路线 -->
+<section class="slide" data-title="挑战 · 开发与 Java 路线">
+  <p class="kicker">// part 05 · key challenge [3/3]</p>
+  <h2 class="h2">开发完成 ≠ 可交付：<span class="accent">真实运行条件</span>才是检验场</h2>
+  <div class="grid g2 mt-l">
+    <div class="list-card">
+      <h4>4 个被低估的问题</h4>
+      <ul>
+        <li>① 开发环境与<strong>Win7 工控机</strong>差异大，布局/字体异常</li>
+        <li>② 启动接近 25 秒 → 现场感知"无响应" → 优化到 4-5 秒</li>
+        <li>③ 云开发<strong>不适合</strong>本地硬件场景（激活、模拟、本地调试）</li>
+        <li>④ 内部最小闭环测试条件不足，靠 AI 写小工具弥补</li>
+      </ul>
+    </div>
+    <div class="list-card">
+      <h4>Java 技术路线复盘</h4>
+      <ul>
+        <li>启动前的顾虑：<strong>Win7 工控机能否兼容、稳不稳</strong></li>
+        <li>项目结论：<strong>顾虑已被实质性解决</strong></li>
+        <li>真正决定成败的不是语言标签</li>
+        <li>是<strong>目标兼容、启动性能、硬件联调、现场验证</strong></li>
+      </ul>
+    </div>
+  </div>
+  <div class="quote-block mt-l">
+    <p>后续无需把"<strong>Java 还是 .NET</strong>"作为主要风险判断项——技术栈统一更利于团队长期沉淀，前提是<strong>建立面向工控机的兼容基线和性能标准</strong>。</p>
+  </div>
+  <aside class="notes">
+    <p>第三个挑战——开发测试和环境适配。这一块我想强调一个观点——<strong>开发完成不等于可交付</strong>。</p>
+    <p>左边是 4 个被低估的问题。<em>第一</em>，开发环境跟 Win7 工控机差异大，布局错乱字体异常，得专门搭目标环境逐项调。<em>第二</em>，启动 25 秒，现场会直接觉得"卡死了"——这在工业场景是不可接受的，最后通过非关键初始化后置、缓存、加载图等方法降到 4-5 秒。<em>第三</em>，团队在试云开发，但这种本地激活、硬件模拟、本地数据库的场景，<strong>云开发就是不合适</strong>。<em>第四</em>，内部测试条件不全，相机数据靠模拟工具，AI 帮我写了几个小工具补上空缺。</p>
+    <p>右边是<strong>Java 技术路线的复盘</strong>。项目启动前团队是有顾虑的——担心 Java 在工控机上不兼容、不稳定、没案例。</p>
+    <p>项目跑完之后<strong>这个顾虑已经被实质性解决了</strong>。结论很明确——<em>真正决定成败的不是语言标签，是兼容、性能、联调、现场验证</em>。</p>
+    <p>所以以后不用再把"Java 还是 .NET"当主要风险，但前提是建立工控机适配的基线和性能标准。</p>
+  </aside>
+</section>
+<!-- 17. 部署与跟产 -->
+<section class="slide" data-title="部署与跟产">
+  <p class="kicker">// part 06 · field deployment</p>
+  <h2 class="h2">部署 · 试运行 · 正式跟产</h2>
+  <div class="timeline">
+    <div class="timeline-item"><div class="dot"></div><div><h6>3/30 · 到厂部署</h6><p>设备维修占用大半天，实际联调时间被压缩；剔除装置信号已验证，但<strong>实际剔除时机需结合产线节拍重新校准</strong>。</p></div></div>
+    <div class="timeline-item"><div class="dot"></div><div><h6>3/31 · 多轮校准</h6><p>初步确定剔除时序，并在次日继续验证，直至能稳定将异常箱剔除到指定位置。</p></div></div>
+    <div class="timeline-item"><div class="dot"></div><div><h6>4/1 · 正式生产前</h6><p>提前完成软件更新和码包导入，开工前进行<strong>简短培训</strong>。</p></div></div>
+    <div class="timeline-item"><div class="dot"></div><div><h6>4/1 · 正式跟产</h6><p>新版未脱离旧版使用习惯，<strong>现场人员快速上手，未产生明显抵触</strong>。整体运行稳定，仅出现少量交互细节问题。</p></div></div>
+  </div>
+  <div class="quote-block mt-l">
+    <p>很多问题<strong>无法在办公室彻底解决</strong>，必须在真实运行节拍和实物条件下校准——这是产线项目和常规软件项目最大的不同。</p>
+  </div>
+  <aside class="notes">
+    <p>这一页讲部署和跟产。我用时间线的方式把过程呈现出来，因为<strong>时间线本身就揭示了产线项目的特点</strong>——很多事不是一次到位，而是分多轮校准。</p>
+    <p>3 月 30 日到厂，原本想完整调试，但<em>设备维修占了大半天</em>。剔除装置在调试阶段已经验证过信号能触发，但因为<strong>气缸没启用</strong>，真实剔除动作的时机还得结合产线节拍重新校准。</p>
+    <p>3 月 31 日继续多轮校准，初步定下剔除时序，第二天再验证。</p>
+    <p>4 月 1 日正式生产前，先完成软件更新和码包导入，利用开工前的时间做了简短培训。因为新版整体没脱离旧版习惯，工人很快就上手，<strong>没有出现抵触情绪</strong>，这是非常重要的——你做的产品再好，如果工人不愿意用，也是失败。</p>
+    <p>底下这句话是这一阶段最大的体会——<strong>真实运行节拍 + 实物条件，是办公室无法复现的</strong>。哪怕你在内部测试 100 遍都没问题，到了现场剔除装置触发的时机依然得重新校准。<em>这是产线项目和常规软件项目最大的区别</em>。</p>
+  </aside>
+</section>
+
+<!-- 18. 跟产典型问题 -->
+<section class="slide" data-title="跟产典型问题">
+  <p class="kicker">// part 06 · field issues</p>
+  <h2 class="h2">3 个典型现场问题与<span class="accent">体验启示</span></h2>
+  <div class="grid g3 mt-l">
+    <div class="card card-accent">
+      <h4>① 高危操作密码过频</h4>
+      <p class="dim"><strong>处理</strong>：移除数据替换密码，保留取消关联密码。</p>
+      <p class="dim mt-s"><strong>启示</strong>：权限设计不能只强调风险控制，<em>必须平衡操作频率与现场效率</em>。理想化控制，反而难被接受。</p>
+    </div>
+    <div class="card card-accent">
+      <h4>② 弹窗未自动聚焦</h4>
+      <p class="dim"><strong>处理</strong>：第一时间优化为弹窗自动聚焦输入框。</p>
+      <p class="dim mt-s"><strong>启示</strong>：体验提升不在"大改版"，<em>而在高频细节</em>——少一次点击、少一次等待，比复杂设计更有价值。</p>
+    </div>
+    <div class="card card-accent">
+      <h4>③ 扫码枪现场异常</h4>
+      <p class="dim"><strong>处理</strong>：人工输入兜底，午休停产窗口修复并更新版本。</p>
+      <p class="dim mt-s"><strong>启示</strong>：临近上线的改动可能影响原本正常的链路，<em>发布前必须强化基础输入设备的回归</em>。</p>
+    </div>
+  </div>
+  <div class="quote-block mt-l">
+    <p>接地气的细微设计反而加分——以前扫码后还要点"查询"，现在<strong>扫码自动触发</strong>，光这一点就给操作员带来惊喜。</p>
+  </div>
+  <aside class="notes">
+    <p>这一页讲跟产期间的 3 个典型问题。这些都是真实发生过、当场处理的，不是事后想出来的。</p>
+    <p><em>第一个</em>，<strong>高危操作密码太频繁</strong>。我们一开始为了控制风险，给数据替换、取消关联都加了密码校验。结果上线后发现，某些高频操作每次输密码会直接拖慢节拍。最后跟工厂沟通，移除数据替换的密码，保留取消关联的。<em>启示是权限设计要平衡风险和效率</em>，过于理想化的控制反而被嫌弃。</p>
+    <p><em>第二个</em>，<strong>弹窗没自动聚焦</strong>。工人不看屏幕，扫码枪直接打字，输入框没聚焦就出现"输入没反应"的感觉。立刻优化为自动聚焦。<em>启示是体验提升不在大改版，在高频细节</em>。少一次点击、少一次等待，这种小事比花哨设计有价值得多。</p>
+    <p><em>第三个</em>，<strong>扫码枪现场异常</strong>。调试阶段是好的，正式生产却收不到数据。临时改动惹的祸。<em>启示是发布前必须做基础输入设备的回归</em>。</p>
+    <p>下面这句话我反复体会过——<strong>接地气的细微设计才真正加分</strong>。比如扫码自动触发这种小改进，工人会主动跟你说"哎这个版本舒服多了"。</p>
+  </aside>
+</section>
+
+<!-- 19. AI 应用 -->
+<section class="slide" data-title="AI 应用复盘">
+  <p class="kicker">// part 07 · AI in this project</p>
+  <h2 class="h2">AI 在本项目中：<span class="accent">是杠杆，不是答案</span></h2>
+  <div class="grid g2 mt-l">
+    <div class="list-card">
+      <h4>AI 带来的 5 个价值</h4>
+      <ul>
+        <li>加速<strong>陌生领域</strong>认知建立</li>
+        <li>提升方案与<strong>文档产出</strong>效率</li>
+        <li>辅助 UI 与<strong>原型设计</strong>（结合 Pencil）</li>
+        <li>辅助技术分析与<strong>模拟测试工具</strong>编写</li>
+        <li>反向检查方案<strong>边界与遗漏</strong></li>
+      </ul>
+    </div>
+    <div class="list-card">
+      <h4>AI 的 3 条边界</h4>
+      <ul>
+        <li>无法替代<strong>现场事实</strong>（接线、信号、节拍、习惯）</li>
+        <li>容易<strong>放大错误前提</strong>，输入歪结论也歪</li>
+        <li>无法替代<strong>项目责任判断</strong>（范围/风险/上线决策）</li>
+      </ul>
+    </div>
+  </div>
+  <div class="quote-block mt-l">
+    <p>使用原则：用 AI <strong>加速认知和产出</strong>，但不替代决策；关键技术分析<strong>多模型交叉</strong>；AI 输出必须经业务、开发、测试和现场<strong>共同校验</strong>。</p>
+  </div>
+  <aside class="notes">
+    <p>专门把 AI 单独拎一页讲，因为这个项目里 AI 用得很重，价值和边界都比较清晰。</p>
+    <p>左边是 <strong>5 个真实带来的价值</strong>，每个我都展开讲：</p>
+    <p><strong>① 加速陌生领域认知建立</strong>——刚接手项目、知识储备不足的阶段，AI 在<em>资料整理、概念梳理、问题归类、思路发散</em>上帮我节省了大量时间。从"完全陌生"到"具备基本判断"的速度明显加快。</p>
+    <p><strong>② 提升方案与文档产出效率</strong>——通过固定模板、Skill 和结构化输入，AI 把<em>主文档、子页面方案、交互说明、补充材料</em>的产出效率拉高一大截，重复表达工作减少很多。</p>
+    <p><strong>③ 辅助 UI 与原型设计</strong>——这个项目没有专职 UI，AI 配合 Pencil 协助完成<em>页面初稿、布局统一、方案联动调整</em>。让交互设计快速进入"可用状态"，不需要等专门资源。</p>
+    <p><strong>④ 辅助技术分析与模拟测试</strong>——通信协议分析、辅助小工具编写、Python 自动化模拟测试，AI 帮我<em>写出几个补救工具</em>，弥补了内部没有完整硬件闭环的测试缺口。</p>
+    <p><strong>⑤ 反向检查方案遗漏</strong>——AI 当"<em>第二轮检查者</em>"，帮我发现边界条件、输入约束、异常路径、逻辑歧义里的漏洞。这个角色很值。</p>
+    <p>但 AI 也有<strong>清晰的边界，3 条</strong>——</p>
+    <p><em>第一</em>，无法替代现场事实。设备接线、信号、节拍、工人习惯，AI 推理不了，必须现场验证。</p>
+    <p><em>第二</em>，容易放大错误前提。如果你给的输入文档本身错了，AI 会基于错误前提产出"看起来很合理但实际是错的"内容。这个最危险。</p>
+    <p><em>第三</em>，无法替代项目责任判断。比如要不要替换 1 号机、要不要保留密码——这是项目判断，不是模型推理。</p>
+    <p>所以使用原则就是底下这句话——<strong>AI 是杠杆，不是答案</strong>。它能缩短从"问题"到"候选方案"的距离，但<em>让候选方案落地的，仍然是现场验证、跨角色协同和项目负责人的决策</em>。</p>
+  </aside>
+</section>
+
+<!-- 20. 核心问题根因 + 方法论 -->
+<section class="slide" data-title="根因与方法论">
+  <p class="kicker">// part 08 · root cause &amp; method</p>
+  <h2 class="h2">根因 6 类 &amp; <span class="accent">方法论 5 条</span></h2>
+  <div class="compare">
+    <div class="col bad">
+      <h5>▼ 核心问题根因（6 类）</h5>
+      <ul>
+        <li>① <strong>前置认知不足</strong>，边做边补课</li>
+        <li>② 历史能力<strong>依赖外部</strong>，沉淀不进公司</li>
+        <li>③ 文档与实际<strong>长期脱节</strong></li>
+        <li>④ 硬件信息<strong>不成体系</strong></li>
+        <li>⑤ 工业软件设计习惯<strong>未完全建立</strong></li>
+        <li>⑥ 项目机制支撑不足，<strong>过度依赖个体补位</strong></li>
+      </ul>
+    </div>
+    <div class="col good">
+      <h5>▲ 沉淀的方法论（5 条）</h5>
+      <ul>
+        <li>把未知变已知：<strong>资料 → 访谈 → 现场 → 验证 → 闭环</strong></li>
+        <li>工业软件优先级：<strong>正确 &gt; 稳定 &gt; 可操作 &gt; 学习成本 &gt; 界面</strong></li>
+        <li>方案设计<strong>面向异常</strong>，不只面向主流程</li>
+        <li>高不确定性项目<strong>先做范围控制</strong>，不为完整牺牲交付</li>
+        <li>"做完"包含 SOP 与培训，<strong>从开发完成走向业务完成</strong></li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes">
+    <p>这一页是浓缩——把项目里所有的问题归纳成 6 类根因，把所有经验提炼成 5 条方法论。</p>
+    <p>先看左边 <strong>6 类根因</strong>，每条我都展开讲一下：</p>
+    <p><strong>① 前置认知不足</strong>——项目接手时，对产线业务、设备和异常场景缺乏系统认知，导致早期很多问题<em>需要边做边补课</em>。</p>
+    <p><strong>② 历史能力依赖外部</strong>——第三方主导的旧版系统让关键逻辑和现场经验<em>没充分沉淀进公司内部</em>，结果就是交接成本高、判断难度大。</p>
+    <p><strong>③ 文档与实际长期脱节</strong>——历史文档、代码现状和现场实际行为之间存在偏差，方案设计和问题排查<em>必须做大量交叉验证</em>。</p>
+    <p><strong>④ 硬件信息不成体系</strong>——软硬件通信资料不全，成为<em>开发排期和联调推进中最大的不确定性来源</em>。</p>
+    <p><strong>⑤ 工业软件设计习惯未完全建立</strong>——从常规软件视角出发，容易过度强调功能完整或设计严谨，<em>忽略现场操作效率、高频动作习惯和异常恢复便利性</em>。</p>
+    <p><strong>⑥ 缺少成体系的项目机制</strong>——很多问题最终虽被解决，但更多<em>依赖个体补位、临场响应和反复沟通</em>，说明团队在产线项目方法、清单、流程上仍有较大完善空间。</p>
+    <p>这 6 条看起来分散，但都指向同一个本质——<strong>团队缺一套面向产线项目的体系化机制，所以只能靠个体补位</strong>。</p>
+    <p>右边 <strong>5 条方法论</strong>是这次项目最值钱的产出——</p>
+    <p><strong>第一条</strong>是把未知变已知的标准路径：<em>资料收集 → 关键人访谈 → 现场观察 → 旧系统验证 → 问题分类 → 方案建模 → 小范围验证 → 现场闭环</em>。所有陌生领域项目都适用。</p>
+    <p><strong>第二条</strong>是工业软件的优先级：正确 &gt; 稳定 &gt; 可操作 &gt; 学习成本 &gt; 界面。<em>顺序错了，方向就错了</em>。</p>
+    <p><strong>第三条</strong>，方案要面向异常，不只面向主流程——异常怎么发现、怎么阻断、怎么恢复、谁来处理，必须想清楚。</p>
+    <p><strong>第四条</strong>，高不确定项目先做范围控制——这就是 1 号机决策的本质。</p>
+    <p><strong>第五条</strong>，"做完"必须包括 SOP 和培训。从"开发完成"走到"业务完成"，差的就是这一步。</p>
+  </aside>
+</section>
+
+<!-- 21. 后续改进方向 -->
+<section class="slide" data-title="后续改进方向">
+  <p class="kicker">// part 09 · what's next</p>
+  <h2 class="h2">CCAS 产品规划：<span class="accent">产品方向与持续改进</span></h2>
+  <div class="grid g3 mt-l">
+    <div class="card card-accent">
+      <h4>产品定位</h4>
+      <p class="dim">对外都是 <strong>OP 定制项目交付</strong>（不存在"标准版可买"）；"通用能力"是<strong>内部沉淀目标</strong>，统一代码底座 + 变体扩展（variant-xxx）支撑多产线。</p>
+    </div>
+    <div class="card card-accent">
+      <h4>SaaS / 云端定位</h4>
+      <p class="dim">当前按 <strong>OP 版执行</strong>，CCAS <strong>不规划独立 SaaS 版本</strong>（仅保留扩展空间）；与米多星球/BDE/大数据引擎通过<strong>接口协同</strong>，不扩展为 SaaS。</p>
+    </div>
+    <div class="card card-accent">
+      <h4>存量切换战略</h4>
+      <p class="dim"><strong>存量产线全部切换</strong>为明确方向；按问题严重度、配合度、合同情况、现场风险<strong>分批推进</strong>。<br>首批：石湾 → 致美斋 → 芦台春 → 皇沟。</p>
+    </div>
+    <div class="card card-accent">
+      <h4>技术层</h4>
+      <p class="dim">完善软硬件通信能力沉淀；建本地模拟测试环境；优化日志/监控/排障；为 1 号机后续替换积累现场数据。</p>
+    </div>
+    <div class="card card-accent">
+      <h4>项目管理与协同</h4>
+      <p class="dim">引入<strong>标准风险清单</strong> + 硬件信息不全时排期风险提示；强化发布前回归；明确研发/实施/设备/测试<strong>接口责任</strong>。</p>
+    </div>
+    <div class="card card-accent">
+      <h4>文档与知识层</h4>
+      <p class="dim">明确<strong>单一事实源</strong>；高频模板/清单形成规范；判断依据沉淀为知识资产，而非个人经验。</p>
+    </div>
+  </div>
+  <aside class="notes">
+    <p>讲完根因和方法论，看后续往哪走。这一块我把<strong>本次复盘的判断和 CCAS V1.0 最新规划口径对齐</strong>了，分成 6 块。</p>
+    <p>第一块——<strong>产品定位</strong>。这是最近 4 月 30 日规划会议确认的：<em>CCAS 对外都是 OP 定制项目交付，不存在"标准版可买"的概念</em>。"通用能力"只是<strong>内部沉淀目标</strong>，靠统一代码底座加变体扩展（variant-xxx 模块）来支撑多产线。这个口径很重要，避免对客户讲"标准版"造成误解。</p>
+    <p>第二块——<strong>SaaS 定位</strong>。比之前的复盘判断更明确——<em>当前按 OP 版执行，CCAS 不规划独立 SaaS 版本</em>，只保留扩展空间。与米多星球、BDE、大数据引擎通过<strong>接口协同</strong>，不再扩展成 SaaS 形态。</p>
+    <p>第三块——<strong>存量切换战略</strong>，这是规划会议的另一个关键决策——<em>存量产线全部切换为明确方向</em>，不再选择性评估。首批顺序已经定了：<strong>石湾 → 致美斋 → 芦台春 → 皇沟</strong>。这意味着石湾不只是"做完了"，它是首批样板线之一，后面三条线要复用这次的经验。</p>
+    <p>第四到第六块是技术、管理、文档层的常规改进——通信知识库、模拟测试、风险清单、发布前回归、单一事实源。这些都是本次踩过的坑反推出来的。</p>
+    <p>这 6 块合起来，复盘的方向跟最新规划完全对齐。</p>
+  </aside>
+</section>
+
+<!-- 22. 结语 -->
+<section class="slide" data-title="结语 + Q&amp;A">
+  <p class="kicker">// part 10 · closing</p>
+  <h2 class="h2">完成的不只是一套软件，<br>更是<span class="accent">几件事</span></h2>
+  <div class="stack mt-l">
+    <div class="rule-row">
+      <span class="num red">01</span>
+      <div>
+        <b>从"<span class="accent">开发视角</span>"切换到"<span class="accent">项目负责视角</span>"</b>
+        <p class="dim">不再只关心"代码逻辑对不对"，而是关心"这件事能不能交付、能不能闭环"。</p>
+      </div>
+    </div>
+    <div class="rule-row">
+      <span class="num red">02</span>
+      <div>
+        <b>对工业软件的设计原则、交付标准和现场逻辑有了<span class="accent">具体认识</span></b>
+        <p class="dim">"正确 &gt; 稳定 &gt; 可操作 &gt; 学习成本 &gt; 界面"不再是口号，而是判断依据。</p>
+      </div>
+    </div>
+    <div class="rule-row">
+      <span class="num red">03</span>
+      <div>
+        <b>对 AI 的<span class="accent">价值与边界</span>形成更务实的判断</b>
+        <p class="dim">AI 是杠杆不是答案，能缩短"问题→候选方案"距离，但落地仍靠现场和决策。</p>
+      </div>
+    </div>
+    <div class="rule-row">
+      <span class="num red">04</span>
+      <div>
+        <b>把过去依赖经验和临场解决的问题，逐步沉淀为<span class="accent">规则、清单和方法</span></b>
+        <p class="dim">复盘的核心不在于回顾完成了多少，而在于<strong>把经验转化为可复制的机制</strong>。</p>
+      </div>
+    </div>
+  </div>
+  <p class="lede mt-l tc">谢谢大家。<span class="accent">Q&amp;A</span> · 欢迎讨论。</p>
+  <div class="deck-footer">
+    <span class="mono">#shiwan #ccas #retrospective · 2026</span>
+    <span class="slide-number" data-current="22" data-total="22"></span>
+  </div>
+  <aside class="notes">
+    <p>讲到最后一页，我想跟大家说一件事——<strong>这个项目完成的不只是一套软件</strong>。</p>
+    <p>更重要的是 4 件事：</p>
+    <p><strong>第一</strong>，我自己完成了从"开发视角"到"项目负责视角"的切换。这种切换不是头衔的变化，是<em>关注点的变化</em>——不再纠结代码细节，而是关心整件事能不能闭环。</p>
+    <p><strong>第二</strong>，对工业软件的设计原则有了具体认识。"正确大于稳定大于可操作大于学习成本大于界面"——这不再是抽象口号，是真的能用来判断方案对不对的依据。</p>
+    <p><strong>第三</strong>，对 AI 的价值和边界有了务实判断。<em>AI 是杠杆不是答案</em>——这是这个项目带给我最有价值的认知之一。</p>
+    <p><strong>第四</strong>，开始把个人经验沉淀成规则、清单和方法。<em>复盘真正的价值，不在于回顾完成了多少，而在于把经验转化成可复制的机制</em>。</p>
+    <p>讲到这里，今天的复盘就结束了。如果有同事在做类似项目，希望这份复盘能让你少走几步弯路。</p>
+    <p>欢迎提问，谢谢大家。</p>
+  </aside>
+</section>
+</div>
+<script src="../assets/runtime.js"></script>
+</body>
+</html>
