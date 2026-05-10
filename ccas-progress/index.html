@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-mode="dark" data-accent="amber">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>赋码采集关联系统 · 工程进度</title>
+<link rel="stylesheet" href="../assets/fonts.css">
+<link rel="stylesheet" href="style.css">
+<script>
+/* 提前应用持久化主题，避免页面闪一下 */
+(function(){
+  try {
+    var s = JSON.parse(localStorage.getItem('ccas-theme') || '{}');
+    if (s.mode)   document.documentElement.dataset.mode   = s.mode;
+    if (s.accent) document.documentElement.dataset.accent = s.accent;
+  } catch(e) {}
+})();
+</script>
+</head>
+<body>
+
+<!-- ============ 首屏 Hero ============ -->
+<div class="hero" id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <p class="hero-kicker">CCAS · ENGINEERING LOG</p>
+    <h1 class="hero-title">
+      <span class="hero-title-line">赋码采集关联</span>
+      <span class="hero-title-line">系统工程进度</span>
+    </h1>
+    <p class="hero-lede">
+      工业产线数字化的核心基础设施，承载从单品赋码到包装关联的全链路数据采集任务。
+      系统重构不仅是代码迭代，更是对产线业务流程的深度理解与优化——
+      从瓶码采集到盒箱关联，每一次数据流转都涉及设备协同、异常处理与数据一致性的综合考量。
+      本周报记录方案设计、问题排查与产线验收的实战历程，从历史问题中提炼教训，
+      在新版方案中预埋容错机制，将隐性经验显性化。
+    </p>
+    <p class="hero-cue">scroll <span class="hero-cue-arrow">↓</span> 查看最新进展</p>
+  </div>
+</div>
+
+<!-- ============ 顶栏（sticky） ============ -->
+<header class="topbar" id="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-left">
+      <span class="topbar-mark"></span>
+      <span class="topbar-title">CCAS · 工程进度</span>
+    </div>
+    <div class="topbar-right">
+      <span class="topbar-current-label">CURRENT</span>
+      <span class="topbar-current-date" id="topbar-current-date">—</span>
+
+      <div class="theme-switcher">
+        <button class="theme-trigger" id="theme-trigger" type="button" aria-label="切换主题" aria-haspopup="true" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle>
+            <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle>
+            <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle>
+            <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle>
+            <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125 0-.926.75-1.688 1.688-1.688h1.992c3.04 0 5.547-2.508 5.547-5.547C22 6.789 17.51 2 12 2z"></path>
+          </svg>
+        </button>
+
+        <div class="theme-panel" id="theme-panel" role="dialog" aria-label="主题设置">
+
+          <div class="theme-section">
+            <span class="theme-section-label">模式</span>
+            <div class="theme-mode-toggle">
+              <button class="theme-mode-btn" type="button" data-mode="light" aria-pressed="false">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="4"></circle>
+                  <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
+                </svg>
+                浅色
+              </button>
+              <button class="theme-mode-btn" type="button" data-mode="dark" aria-pressed="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+                深色
+              </button>
+            </div>
+          </div>
+
+          <div class="theme-section">
+            <span class="theme-section-label">主色</span>
+            <div class="theme-accent-grid">
+              <button class="theme-accent-btn" type="button" data-accent="amber"  aria-label="琥珀"  aria-pressed="true"></button>
+              <button class="theme-accent-btn" type="button" data-accent="teal"   aria-label="青蓝"  aria-pressed="false"></button>
+              <button class="theme-accent-btn" type="button" data-accent="violet" aria-label="紫罗兰" aria-pressed="false"></button>
+              <button class="theme-accent-btn" type="button" data-accent="rose"   aria-label="玫瑰"  aria-pressed="false"></button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="topbar-progress" id="topbar-progress"></div>
+</header>
+
+<!-- ============ 主体布局 ============ -->
+<div class="layout">
+
+  <!-- 左侧时间轴 -->
+  <aside class="timeline" id="timeline" aria-label="周报时间轴">
+    <!-- 节点由 JS 自动从右侧 .week 扫描生成 -->
+  </aside>
+
+  <!-- 右侧周卡片列表 -->
+  <main class="weeks" id="weeks">
+
+    <!-- ========== 2026.05.10 ========== -->
+    <section class="week" id="week-2026-05-10" data-date="2026.05.10" data-headline="完成云糯山产线报价，确定价格合适，先建立米多与弥特合作关系" data-current="true">
+      <header class="week-head">
+        <div class="week-head-meta">
+          <span class="week-date">2026.05.10</span>
+          <span class="week-tag week-tag-current">当前</span>
+        </div>
+        <h2 class="week-headline">完成云糯山产线报价，确定价格合适，先建立米多与弥特合作关系</h2>
+      </header>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>本周进展</h3>
+        <ul class="progress-list">
+          <li>石湾产线报价暂未提供。</li>
+          <li>与弥特到云糯山、石湾两条产线调研。</li>
+          <li>初步沟通双方软硬件对接思路。</li>
+          <li>石湾纸箱重码数据跟进处理。</li>
+          <li>产线问题跟进：顺酒文化 1 个，芦台春 1 个，玉林泉 1 个。</li>
+        </ul>
+      </div>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>问题与对策</h3>
+
+        <div class="qa-pair">
+          <div class="qa-card qa-problem">
+            <div class="qa-head"><span class="qa-icon">!</span><span class="qa-label">问题</span><span class="qa-no">01</span></div>
+            <p class="qa-title">石湾纸箱重码（2026年1月7日-8日）数据重新上传时，换新箱装旧盒，出现较多上传失败记录，原因为这些盒码已上传过关联关系</p>
+          </div>
+          <div class="qa-arrow" aria-hidden="true"></div>
+          <div class="qa-card qa-action">
+            <div class="qa-head"><span class="qa-icon">✓</span><span class="qa-label">对策</span></div>
+            <p class="qa-body">为不影响处理效率，已要求工厂侧统一先装箱、形成箱垛关系；下周将已上传过的盒码记录取消关联后，再将新数据重新上传。</p>
+          </div>
+        </div>
+
+        <div class="qa-pair">
+          <div class="qa-card qa-problem">
+            <div class="qa-head"><span class="qa-icon">!</span><span class="qa-label">问题</span><span class="qa-no">02</span></div>
+            <p class="qa-title">弥特产线报价原定5月8日提供，实际5月9日下午才给出，且仅提供云糯山产线，石湾产线报价未提供</p>
+          </div>
+          <div class="qa-arrow" aria-hidden="true"></div>
+          <div class="qa-card qa-action">
+            <div class="qa-head"><span class="qa-icon">✓</span><span class="qa-label">对策</span></div>
+            <p class="qa-body">下周一继续跟进报价进度，同时对比陈智预估价格，确认石湾产线是否适合合作。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>下周计划</h3>
+        <ul class="plan-list">
+          <li>云糯山产线产品方案。</li>
+          <li>石湾产线产品方案。</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ========== 2026.05.03 ========== -->
+    <section class="week" id="week-2026-05-03" data-date="2026.05.03" data-headline="整体规划初稿沟通对齐">
+      <header class="week-head">
+        <div class="week-head-meta">
+          <span class="week-date">2026.05.03</span>
+        </div>
+        <h2 class="week-headline">整体规划初稿沟通对齐</h2>
+      </header>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>本周进展</h3>
+        <ul class="progress-list">
+          <li>CCAS整体规划初稿已完成沟通对齐，后续根据讨论结果继续调整完善。</li>
+          <li>硬件供应商完成初步对接。</li>
+          <li>石湾纸箱重码数据中的瓶盒数据已同步，待5月9日重新上传。</li>
+        </ul>
+      </div>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>问题与对策</h3>
+        <div class="qa-pair">
+          <div class="qa-card qa-problem">
+            <div class="qa-head"><span class="qa-icon">!</span><span class="qa-label">问题</span><span class="qa-no">01</span></div>
+            <p class="qa-title">云糥山、石湾等产线，弥特方案和报价需到实地调研后才能给出较精准结果</p>
+            <p class="qa-body">云糥山、石湾等产线涉及现场设备、产线节拍、安装环境等因素，弥特方案和报价仅靠线上信息较难准确确认，需要到实地调研后再给出较精准结果。</p>
+          </div>
+          <div class="qa-arrow" aria-hidden="true"></div>
+          <div class="qa-card qa-action">
+            <div class="qa-head"><span class="qa-icon">✓</span><span class="qa-label">对策</span></div>
+            <p class="qa-body">先与工厂一侧沟通能否到厂、到厂时间等安排，再与弥特联系，推动双方一起到现场确认清楚，尽早给出方案和报价。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>下周计划</h3>
+        <ul class="plan-list">
+          <li>出差佛山石湾、肇庆云糥山两条产线，开展现场调研。</li>
+          <li>跟进产线方案与报价、议价结果，并同步给业务拓展部和客户成功部，推进合同签订。</li>
+          <li>处理石湾纸箱重码数据重新上传。</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ========== 2026.04.26 ========== -->
+    <section class="week" id="week-2026-04-26" data-date="2026.04.26" data-headline="致美斋待部署">
+      <header class="week-head">
+        <div class="week-head-meta">
+          <span class="week-date">2026.04.26</span>
+        </div>
+        <h2 class="week-headline">致美斋待部署</h2>
+      </header>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>本周进展</h3>
+        <ul class="progress-list">
+          <li>致美斋项目五一节后再约定具体部署时间。致美斋一方提出希望先体验新版软件，原计划周五给出结论；实际因相关人员暂无时间体验，暂按项目正常排期推进。</li>
+          <li>CCAS整体规划完成第1稿沟通，并根据反馈进行调整；同步梳理待讨论议题，准备二次对齐。</li>
+          <li>石湾小酒线完成新酒试运行，详见 <a class="ext-link" href="https://miduo1031.yuque.com/rsaesz/dugniz/vg5wuv73tvwupggt?singleDoc" target="_blank" rel="noopener">《2026-04-21-石湾酒厂琥珀小酒生产试运行报告》</a>。</li>
+          <li>完成云糥山赋码采集关联集成项目协议及报价信息填写。</li>
+          <li>与石湾沟通前期纸箱重码数据重新上传方案。</li>
+        </ul>
+      </div>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>问题与对策</h3>
+        <div class="qa-pair">
+          <div class="qa-card qa-problem">
+            <div class="qa-head"><span class="qa-icon">!</span><span class="qa-label">问题</span></div>
+            <p class="qa-title">石湾前期纸箱重码数据需要在新版软件中处理并重新上传</p>
+            <p class="qa-body">石湾前期纸箱重码数据产生于旧版软件和旧数据库环境，需要按新版软件和新版数据结构进行处理后，再重新上传。</p>
+          </div>
+          <div class="qa-arrow" aria-hidden="true"></div>
+          <div class="qa-card qa-action">
+            <div class="qa-head"><span class="qa-icon">✓</span><span class="qa-label">对策</span></div>
+            <ul class="qa-list">
+              <li>确定旧数据同步范围为 <code class="kbd">2026/1/7 - 2026/1/8</code>，避免拉取数据量过大，影响处理时间和存储空间。</li>
+              <li>按新版数据结构写入相关数据，保证后续上传和查询逻辑一致。</li>
+              <li>剔除采集比例异常或无效的数据；相关产品由工厂更换新箱后重新过龙门架采集，再进行上传。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>下周计划</h3>
+        <ul class="plan-list">
+          <li>沟通并对齐CCAS整体规划第2稿。</li>
+          <li>处理石湾纸箱重码数据，并推进重新上传。</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ========== 2026.04.18 ========== -->
+    <section class="week" id="week-2026-04-18" data-date="2026.04.18" data-headline="致美斋 T1.0.1 优化-测试完成，下周验收">
+      <header class="week-head">
+        <div class="week-head-meta">
+          <span class="week-date">2026.04.18</span>
+        </div>
+        <h2 class="week-headline">致美斋 T1.0.1 优化-测试完成，下周验收</h2>
+      </header>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>本周进展</h3>
+        <ul class="progress-list">
+          <li><strong class="hl">致美斋</strong>：需求调整、用例评审、测试验证，并同步做 UI 优化</li>
+          <li><strong class="hl">石湾</strong>：跟进精玉线设备与报价咨询答疑；处理剔除、复制功能等问题</li>
+          <li>产线问题跟进：乾坤福（文君特曲）1个；皇沟产线上传失败问题处理完毕</li>
+        </ul>
+        <div class="ref-list">
+          <span class="ref-list-label">参考文档</span>
+          <div class="ref-list-items">
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/uhfln6ng9keutzfn?singleDoc#" target="_blank" rel="noopener">品牌域4月产线计划</a>
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/le8aprhw1km9agbb?singleDoc#" target="_blank" rel="noopener">赋码采集关联系统（石湾版）问题清单</a>
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/og9dzmnkytvb6ou0?singleDoc#" target="_blank" rel="noopener">乾坤福产线日常问题</a>
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/rgv7orib6xd9gl95?singleDoc#" target="_blank" rel="noopener">皇沟产线日常问题</a>
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/gh28mrx9olu8cast?singleDoc#" target="_blank" rel="noopener">品牌域CCAS项目实施专员工作职责</a>
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/xgadv9r8vdzvc593?singleDoc#" target="_blank" rel="noopener">CCAS文档模板</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>问题与对策</h3>
+
+        <div class="qa-pair">
+          <div class="qa-card qa-problem">
+            <div class="qa-head"><span class="qa-icon">!</span><span class="qa-label">问题</span><span class="qa-no">01</span></div>
+            <p class="qa-title">石湾首箱剔除不准</p>
+            <p class="qa-body">首箱过龙门架时，因 1 号机裹包机信号延迟，盒数据采集不准（历史遗留问题，客户已知且能接受），目前是剔除装置提前空剔，真箱到位时反而不踢。</p>
+            <ul class="qa-list">
+              <li>初步发现箱码相机触发偏早，未读到码就返回 none，软件校验异常发出剔除信号</li>
+              <li>联系客户复测，确认箱子取下后再过龙门架可正常踢中</li>
+            </ul>
+          </div>
+          <div class="qa-arrow" aria-hidden="true"></div>
+          <div class="qa-card qa-action">
+            <div class="qa-head"><span class="qa-icon">✓</span><span class="qa-label">对策</span></div>
+            <ul class="qa-list">
+              <li>建议开工后先外物（如纸箱）经过相机触发一次相机校验，再进行首箱过箱</li>
+              <li>软件先打日志记录相机触发时间，后续再分析原因（周日更新版本，下周一生产触发后获取日志）</li>
+              <li>评估软件预热或复位方案；相机深调作为备选，避免影响后续生产</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="qa-pair">
+          <div class="qa-card qa-problem">
+            <div class="qa-head"><span class="qa-icon">!</span><span class="qa-label">问题</span><span class="qa-no">02</span></div>
+            <p class="qa-title">致美斋历史遗留问题较多，验收时间延期</p>
+            <p class="qa-body">致美斋新版采集软件V1.0，相对粗糙，有托盘码/尾箱箱码顺序、生产批次、多批次上传、本垛无码删除策略、托盘无码上传等遗留项/缺陷，规则相比旧版变动较大；多数文字显示较小，展示不全等，不是很符合工厂使用习惯；验收较原计划延后 2 天，预计下周一完结。</p>
+          </div>
+          <div class="qa-arrow" aria-hidden="true"></div>
+          <div class="qa-card qa-action">
+            <div class="qa-head"><span class="qa-icon">✓</span><span class="qa-label">对策</span></div>
+            <ul class="qa-list">
+              <li>优先调研旧版软件功能，保持对齐，避免造新的业务逻辑，从而连带大片调整</li>
+              <li>AI参考石湾产线软件设计，优化UI展示，符合工厂使用习惯</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>下周计划</h3>
+        <ul class="plan-list">
+          <li>CCAS 总体规划调整，与各方对齐。</li>
+          <li><strong class="hl">致美斋</strong>：部署。</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ========== 2026.04.12 ========== -->
+    <section class="week" id="week-2026-04-12" data-date="2026.04.12" data-headline="赋码采集关联系统（致美斋）优化需求，开发完成，待自测">
+      <header class="week-head">
+        <div class="week-head-meta">
+          <span class="week-date">2026.04.12</span>
+        </div>
+        <h2 class="week-headline">赋码采集关联系统（致美斋）优化需求，开发完成，待自测</h2>
+      </header>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>本周进展</h3>
+        <ul class="progress-list">
+          <li>新版本交付物持续整理中。</li>
+          <li>产线问题跟进：皇沟 2 个、芦台春 2 个、芳甸 2 个。</li>
+        </ul>
+        <div class="ref-list">
+          <span class="ref-list-label">参考文档</span>
+          <div class="ref-list-items">
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/aexwk52ypkp2etsl?singleDoc#" target="_blank" rel="noopener">赋码采集关联系统-市场需求文档（MRD）V1.0</a>
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/qv2587yafv07oykd?singleDoc#" target="_blank" rel="noopener">赋码采集关联系统（石湾版）用户操作手册V1.0</a>
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/bd3flznn9g9zss7i?singleDoc#" target="_blank" rel="noopener">赋码采集关联系统（石湾版）-功能清单V1.0</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>问题与对策</h3>
+
+        <div class="qa-pair">
+          <div class="qa-card qa-problem">
+            <div class="qa-head"><span class="qa-icon">!</span><span class="qa-label">问题</span><span class="qa-no">01</span></div>
+            <p class="qa-title">石湾来料检测小程序沟通信息不同步</p>
+            <p class="qa-body">石湾工厂负责人年前提出希望增加一个物料到厂前的来料检测小程序，用于判断来料是否重码。工厂负责人就该事项直接与我沟通，了解上线时间，但这块不在我的负责范围内；此前相关要求已经由世博同步给阿波，不过给出的实现方式依赖 IMP，排期大概在 7、8 月份，且对客户当前主要使用的 BDE 生码没有兼容。</p>
+          </div>
+          <div class="qa-arrow" aria-hidden="true"></div>
+          <div class="qa-card qa-action">
+            <div class="qa-head"><span class="qa-icon">✓</span><span class="qa-label">对策</span></div>
+            <p class="qa-body">再次进行内部沟通后，已确认该需求按现有计划排期推进，并由客成侧继续统一对外同步，避免后续再出现信息不同步。</p>
+          </div>
+        </div>
+
+        <div class="qa-pair">
+          <div class="qa-card qa-problem">
+            <div class="qa-head"><span class="qa-icon">!</span><span class="qa-label">问题</span><span class="qa-no">02</span></div>
+            <p class="qa-title">皇沟历史特殊处理码近期使用时出现关联上传异常</p>
+            <p class="qa-body">皇沟产线有一部分码是几年前生码后通过邮件申请技术特殊处理的，最近才投入使用，结果出现关联数据上传异常。由于历史处理记录未留档，暂时无法准确判断当年做过哪些变动；同时，这类特殊处理在后续功能迭代后未必仍然需要，即便保留，也可能只改了大数据引擎后台，没有同步评估采集软件侧的兼容性。</p>
+          </div>
+          <div class="qa-arrow" aria-hidden="true"></div>
+          <div class="qa-card qa-action">
+            <div class="qa-head"><span class="qa-icon">✓</span><span class="qa-label">对策</span></div>
+            <p class="qa-body">已通过还原现场使用场景、造数据复现异常路径的方式完成问题定位并修复，计划下周一结合生产实际再做现场验证。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>下周计划</h3>
+        <ul class="plan-list">
+          <li><strong class="hl">致美斋</strong>：完成需求验收，部署时间暂延至24号（致美斋没有明确交付时间，4月内替换单线上的软件即可）。</li>
+          <li><strong class="hl">CCAS</strong>：输出总体规划初稿，并与各方领导对齐。</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ========== 2026.04.05 ========== -->
+    <section class="week" id="week-2026-04-05" data-date="2026.04.05" data-headline="赋码采集关联系统（石湾版）部署顺利完成">
+      <header class="week-head">
+        <div class="week-head-meta">
+          <span class="week-date">2026.04.05</span>
+        </div>
+        <h2 class="week-headline">赋码采集关联系统（石湾版）部署顺利完成</h2>
+      </header>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>本周进展</h3>
+        <ul class="progress-list">
+          <li>赋码采集关联系统（石湾版）部署顺利完成。</li>
+        </ul>
+        <div class="ref-list">
+          <span class="ref-list-label">参考文档</span>
+          <div class="ref-list-items">
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/pqsgg1qmobztuuxt?singleDoc#" target="_blank" rel="noopener">赋码采集关联系统（石湾版）项目复盘</a>
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/bnzglrzwexgh5vl5?singleDoc#" target="_blank" rel="noopener">石湾小酒产线工作指导说明</a>
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/qc3cn71sdq3mny2e?singleDoc#" target="_blank" rel="noopener">致美斋优化需求 - AI 文档</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>问题与对策</h3>
+
+        <div class="qa-pair">
+          <div class="qa-card qa-problem">
+            <div class="qa-head"><span class="qa-icon">!</span><span class="qa-label">问题</span><span class="qa-no">01</span></div>
+            <p class="qa-title">新版与旧版操作差异——须先导入码包，否则易误触发剔除</p>
+            <p class="qa-body">新版相对旧版，最关键差别之一是要提前导入码包文件；若未按规范执行，存在误触发剔除的风险。</p>
+          </div>
+          <div class="qa-arrow" aria-hidden="true"></div>
+          <div class="qa-card qa-action">
+            <div class="qa-head"><span class="qa-icon">✓</span><span class="qa-label">对策</span></div>
+            <p class="qa-body">培训中已向工厂负责人、班长等反复强调，并已输出《石湾小酒产线工作指导说明》约束操作。前期上手成本会略高，但能降低后道工序对异常数据的处理压力，提高整体收益。</p>
+          </div>
+        </div>
+
+        <div class="qa-pair">
+          <div class="qa-card qa-problem">
+            <div class="qa-head"><span class="qa-icon">!</span><span class="qa-label">问题</span><span class="qa-no">02</span></div>
+            <p class="qa-title">梳理致美斋方案时发现设计与实际计数的严重偏差</p>
+            <p class="qa-body">致美斋产线存在「有箱码 / 无箱码」两种模式。在有箱码模式下，若不开启剔除，当前逻辑对部分异常码类（如错码、重码等，以现场定义为准）不按正常产量计入；而产线上箱体仍在过站，若不在计数规则上与实物对齐，会出现系统数据与实物箱数不一致。</p>
+          </div>
+          <div class="qa-arrow" aria-hidden="true"></div>
+          <div class="qa-card qa-action">
+            <div class="qa-head"><span class="qa-icon">✓</span><span class="qa-label">对策</span></div>
+            <p class="qa-body">已在致美斋优化需求中纳入该问题，在后续方案与开发迭代中修复。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>下周计划</h3>
+        <ul class="plan-list">
+          <li><strong class="hl">致美斋</strong>：组织优化需求方案串讲，并启动开发。</li>
+          <li><strong class="hl">致美斋</strong>：视开发进度，提前与工厂沟通新版软件替换窗口与准备工作。</li>
+          <li><strong class="hl">皇沟产线</strong>：工厂遇到一些问题，与工厂侧沟通处理。</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ========== 2026.03.28 ========== -->
+    <section class="week" id="week-2026-03-28" data-date="2026.03.28" data-headline="验收 完成">
+      <header class="week-head">
+        <div class="week-head-meta">
+          <span class="week-date">2026.03.28</span>
+        </div>
+        <h2 class="week-headline">验收 完成</h2>
+      </header>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>本周进展</h3>
+        <ul class="progress-list">
+          <li>压测持续进行中，已运行4天</li>
+          <li>已与工厂沟通：<strong class="hl">3月30日</strong>起部署试运行、小批量测试；30–31日停产窗口便于验证实际效果，若有问题或修改意见，汇总后再迭代优化</li>
+        </ul>
+      </div>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>问题与对策</h3>
+        <div class="qa-pair">
+          <div class="qa-card qa-problem">
+            <div class="qa-head"><span class="qa-icon">!</span><span class="qa-label">问题</span></div>
+            <p class="qa-title">软件能否真正缓解工厂采集痛点，需上线使用一段时间后方能下结论</p>
+            <p class="qa-body">方案与验收阶段只能验证功能与流程；一线痛点是否被有效缓解，要靠真实生产与小批量试用的持续反馈来检验。</p>
+          </div>
+          <div class="qa-arrow" aria-hidden="true"></div>
+          <div class="qa-card qa-action">
+            <div class="qa-head"><span class="qa-icon">✓</span><span class="qa-label">对策</span></div>
+            <ul class="qa-list">
+              <li>试运行先小范围或小批量再扩面</li>
+              <li>试运行期间主动收集工厂操作与数据反馈，问题清单化，按优先级迭代</li>
+              <li>与工厂保持沟通畅通，避免出现比旧版更多的问题，发现异常及时协同处置</li>
+              <li>旧版软件兜底，严重问题时切回旧版，确保工厂生产不受影响</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>下周计划</h3>
+        <ul class="plan-list">
+          <li><strong class="hl">3月30–31日</strong>：石湾部署软件，顺带处理纸箱重码数据</li>
+          <li><strong class="hl">致美斋</strong>：优化需求方案整理与串讲</li>
+          <li>出差</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ========== 2026.03.21 ========== -->
+    <section class="week" id="week-2026-03-21" data-date="2026.03.21" data-headline="测试 60%">
+      <header class="week-head">
+        <div class="week-head-meta">
+          <span class="week-date">2026.03.21</span>
+        </div>
+        <h2 class="week-headline">测试 60%</h2>
+      </header>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>本周进展</h3>
+        <ul class="progress-list">
+          <li><strong class="hl">突破性进展</strong>：剔除装置和报警灯等硬件设备信号调通</li>
+        </ul>
+      </div>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>问题与对策</h3>
+
+        <div class="qa-pair">
+          <div class="qa-card qa-problem">
+            <div class="qa-head"><span class="qa-icon">!</span><span class="qa-label">问题</span><span class="qa-no">01</span></div>
+            <p class="qa-title">硬件设备通信盲区，调试依赖推测验证</p>
+            <p class="qa-body">经与陈智多次沟通，获取到继电器的简单通信信号说明，无完整协议文档。</p>
+          </div>
+          <div class="qa-arrow" aria-hidden="true"></div>
+          <div class="qa-card qa-action">
+            <div class="qa-head"><span class="qa-icon">✓</span><span class="qa-label">对策</span></div>
+            <ul class="qa-list">
+              <li>用 AI 梳理可能的通信方式，到厂前做好预案</li>
+              <li>整理本次调试过程中的信号规律，沉淀为内部文档，避免下次重复摸索</li>
+              <li>参考文档 <a class="ext-link" href="https://miduo1031.yuque.com/rsaesz/dugniz/gwir9ey683zh0l9k?singleDoc#" target="_blank" rel="noopener">《继电器通信》</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="qa-pair">
+          <div class="qa-card qa-problem">
+            <div class="qa-head"><span class="qa-icon">!</span><span class="qa-label">问题</span><span class="qa-no">02</span></div>
+            <p class="qa-title">开发周期比预期长</p>
+            <p class="qa-body">方案前期设计不够细致，开发过程中需反复确认边界细节；加之开发人员是首次开发此类项目，AI辅助提效未达到预期，几个因素叠加导致整体周期比预想长。</p>
+          </div>
+          <div class="qa-arrow" aria-hidden="true"></div>
+          <div class="qa-card qa-action">
+            <div class="qa-head"><span class="qa-icon">✓</span><span class="qa-label">对策</span></div>
+            <ul class="qa-list">
+              <li>加快测试推进，下周完成验收收尾</li>
+              <li>提前与石湾工厂沟通到厂时间，确保部署实施环节顺利衔接</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>下周计划</h3>
+        <ul class="plan-list">
+          <li>测试和验收收尾，目标3月底完成首条产线 POC；如遇问题，争取月底前解决，实在完成不了，进展和风险提前同步相关方</li>
+          <li>提前与石湾工厂沟通到厂时间，确保部署实施顺利衔接</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ========== 2026.03.14 ========== -->
+    <section class="week" id="week-2026-03-14" data-date="2026.03.14" data-headline="项目开发 60%">
+      <header class="week-head">
+        <div class="week-head-meta">
+          <span class="week-date">2026.03.14</span>
+        </div>
+        <h2 class="week-headline">项目开发 60%</h2>
+      </header>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>本周进展</h3>
+        <ul class="progress-list">
+          <li><strong class="hl">初次到石湾调试</strong>：配置环境和数据库等基础工作，盒码采集相机正常，箱码采集相机未调通；扫码枪、剔除等串口待下周再整体跑一遍</li>
+          <li><strong class="hl">云糯山产线改造</strong>：完成方案和报价</li>
+        </ul>
+      </div>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>问题与对策</h3>
+
+        <div class="qa-pair">
+          <div class="qa-card qa-problem">
+            <div class="qa-head"><span class="qa-icon">!</span><span class="qa-label">问题</span><span class="qa-no">01</span></div>
+            <p class="qa-title">陈智不配合新版软件与现有硬件通信</p>
+            <p class="qa-body">陈智表示不会配合新版软件与现有硬件设备的通信对接，但旧版软件的问题仍照常维护。会提供部分硬件设备协议，需自行采购匹配设备，按说明和资料自行调试；遇到不懂的可以电联，但回复速度和质量不保证。</p>
+          </div>
+          <div class="qa-arrow" aria-hidden="true"></div>
+          <div class="qa-card qa-action">
+            <div class="qa-head"><span class="qa-icon">✓</span><span class="qa-label">对策</span></div>
+            <ul class="qa-list">
+              <li>1号机继续使用旧版软件，2号机使用新版软件，定时同步数据并做校验判断</li>
+              <li>自行采购匹配（或相近）设备，参考陈智提供的协议文档自行调试</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="qa-pair">
+          <div class="qa-card qa-problem">
+            <div class="qa-head"><span class="qa-icon">!</span><span class="qa-label">问题</span><span class="qa-no">02</span></div>
+            <p class="qa-title">内部最小闭环产线设备采购待跟进</p>
+            <p class="qa-body">年前与陈智说好的电路板已拿到，但内部最小闭环产线设备尚未采购，影响后续联调测试。</p>
+          </div>
+          <div class="qa-arrow" aria-hidden="true"></div>
+          <div class="qa-card qa-action">
+            <div class="qa-head"><span class="qa-icon">✓</span><span class="qa-label">对策</span></div>
+            <ul class="qa-list">
+              <li>尽快采购，优先相机</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>下周计划</h3>
+        <ul class="plan-list">
+          <li>二次到石湾调试（扫码枪、剔除等串口整体联调），测试读取1号机数据库数据</li>
+          <li>测试验收</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ========== 2026.03.07 ========== -->
+    <section class="week" id="week-2026-03-07" data-date="2026.03.07" data-headline="方案评审 完成">
+      <header class="week-head">
+        <div class="week-head-meta">
+          <span class="week-date">2026.03.07</span>
+        </div>
+        <h2 class="week-headline">方案评审 完成</h2>
+      </header>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>本周进展</h3>
+        <ul class="progress-list">
+          <li>根据评审意见调整方案，方案串讲</li>
+          <li>项目进入技术分析阶段，为开发做准备</li>
+        </ul>
+      </div>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>问题与对策</h3>
+        <div class="qa-pair">
+          <div class="qa-card qa-problem">
+            <div class="qa-head"><span class="qa-icon">!</span><span class="qa-label">问题</span></div>
+            <p class="qa-title">方案编写过程中边界易遗漏</p>
+            <p class="qa-body">写方案过程中，容易出现考虑不全、边界场景遗漏等问题；方案涉及产线、技术、产品等多方视角，意见汇总和收敛需要协调，容易出现反复修改，导致评审时或立项才发现需要补充调整。</p>
+          </div>
+          <div class="qa-arrow" aria-hidden="true"></div>
+          <div class="qa-card qa-action">
+            <div class="qa-head"><span class="qa-icon">✓</span><span class="qa-label">对策</span></div>
+            <ul class="qa-list">
+              <li>方案设计阶段提前与产线、技术多方沟通，减少闭门造车；参考历史问题清单，将常见异常和边界场景纳入方案</li>
+              <li>评审前先内部对齐，明确核心诉求与可妥协点；评审后及时整理修改清单，按优先级收敛，避免无限发散</li>
+              <li>重要节点预留缓冲时间，应对方案调整；技术分析阶段与开发确认软硬件接口、通信细节，避免开发时才发现不可行</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>下周计划</h3>
+        <ul class="plan-list">
+          <li>技术分析</li>
+          <li>开发</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ========== 2026.02.28 ========== -->
+    <section class="week" id="week-2026-02-28" data-date="2026.02.28" data-headline="方案设计 完成">
+      <header class="week-head">
+        <div class="week-head-meta">
+          <span class="week-date">2026.02.28</span>
+        </div>
+        <h2 class="week-headline">方案设计 完成</h2>
+      </header>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>本周进展</h3>
+        <ul class="progress-list">
+          <li><strong class="hl">方案调整</strong>：完成，待下周一评审立项。系统设置已合并为一个</li>
+          <li><strong class="hl">石湾第二条产线</strong>：已到场，待梳理报价单</li>
+        </ul>
+        <div class="ref-list">
+          <span class="ref-list-label">方案文档</span>
+          <div class="ref-list-items">
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/lkb4wlgdpmi3bwhh?singleDoc#" target="_blank" rel="noopener">赋码采集关联系统T1.2.0（重构石湾产线）- AI文档</a>
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/bkuvai8u8i5wgr9c?singleDoc#" target="_blank" rel="noopener">UI设计与原型设计</a>
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/mgrapv0pq1ko5pmg?singleDoc#" target="_blank" rel="noopener">P01-01-主界面-瓶盒关联</a>
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/glfi46s9ec349kcg?singleDoc#" target="_blank" rel="noopener">P02-01-主界面-盒箱垛关联</a>
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/mtazl28larbdbdcp?singleDoc#" target="_blank" rel="noopener">P02-02-手工采集</a>
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/eh2lrt6llh1rmoig?singleDoc#" target="_blank" rel="noopener">P02-03-码包管理</a>
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/aq5sthk631h3nr59?singleDoc#" target="_blank" rel="noopener">P02-04-数据查询</a>
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/lxyfp4qn3o12og74?singleDoc#" target="_blank" rel="noopener">P02-05-数据替换</a>
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/cp0mt4uxuq7hqpog?singleDoc#" target="_blank" rel="noopener">P02-06-取消关联</a>
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/ddgs9d8h0vvaymy1?singleDoc#" target="_blank" rel="noopener">P02-07-生产统计</a>
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/tkf0nwho1n4blcoh?singleDoc#" target="_blank" rel="noopener">P02-08-数据上传</a>
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/ptcmx259t88zblg4?singleDoc#" target="_blank" rel="noopener">P03-01-操作帮助</a>
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/td9g4stc72itx86q?singleDoc#" target="_blank" rel="noopener">P03-02-系统设置</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>问题与对策</h3>
+
+        <div class="qa-pair">
+          <div class="qa-card qa-problem">
+            <div class="qa-head"><span class="qa-icon">!</span><span class="qa-label">问题</span><span class="qa-no">01</span></div>
+            <p class="qa-title">前期考虑不全，方案评审延期</p>
+            <p class="qa-body">前期考虑不全，内部与张冉、阿波、王忠等人沟通，到场后结合工厂建议调整方案，方案评审比计划延了2天。</p>
+          </div>
+          <div class="qa-arrow" aria-hidden="true"></div>
+          <div class="qa-card qa-action">
+            <div class="qa-head"><span class="qa-icon">✓</span><span class="qa-label">对策</span></div>
+            <ul class="qa-list">
+              <li>方案设计阶段提前与产线、技术、产品多方沟通，避免鸡肋功能</li>
+              <li>重要节点预留缓冲时间</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="qa-pair">
+          <div class="qa-card qa-problem">
+            <div class="qa-head"><span class="qa-icon">!</span><span class="qa-label">问题</span><span class="qa-no">02</span></div>
+            <p class="qa-title">内部采购最小闭环产线设备</p>
+            <p class="qa-body">内部采购最小闭环产线设备（优先传输带、相机），需提前购买，跟进进度。</p>
+          </div>
+          <div class="qa-arrow" aria-hidden="true"></div>
+          <div class="qa-card qa-action">
+            <div class="qa-head"><span class="qa-icon">✓</span><span class="qa-label">对策</span></div>
+            <p class="qa-body qa-empty">已纳入采购计划，持续跟进进度。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>下周计划</h3>
+        <ul class="plan-list">
+          <li>方案立项</li>
+          <li>技术分析</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ========== 2026.02.21 ========== -->
+    <section class="week" id="week-2026-02-21" data-date="2026.02.21" data-headline="方案设计 完成">
+      <header class="week-head">
+        <div class="week-head-meta">
+          <span class="week-date">2026.02.21</span>
+        </div>
+        <h2 class="week-headline">方案设计 完成</h2>
+      </header>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>本周进展</h3>
+        <ul class="progress-list">
+          <li><strong class="hl">石湾赋码采集关联系统方案设计</strong>：方案初步完成，包括UI设计与高保真原型</li>
+        </ul>
+        <div class="ref-list">
+          <span class="ref-list-label">方案文档</span>
+          <div class="ref-list-items">
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/lkb4wlgdpmi3bwhh?singleDoc#" target="_blank" rel="noopener">赋码采集关联系统重构T1.2（石湾）- AI文档</a>
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/bkuvai8u8i5wgr9c?singleDoc#" target="_blank" rel="noopener">UI设计与原型设计</a>
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/mgrapv0pq1ko5pmg?singleDoc#" target="_blank" rel="noopener">P01-01-主界面-瓶盒关联</a>
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/skkq4z2eszod8kda?singleDoc#" target="_blank" rel="noopener">P01-02-系统设置（1号机）</a>
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/glfi46s9ec349kcg?singleDoc#" target="_blank" rel="noopener">P02-01-主界面-盒箱垛关联</a>
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/mtazl28larbdbdcp?singleDoc#" target="_blank" rel="noopener">P02-02-手工采集</a>
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/eh2lrt6llh1rmoig?singleDoc#" target="_blank" rel="noopener">P02-03-码包管理</a>
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/aq5sthk631h3nr59?singleDoc#" target="_blank" rel="noopener">P02-04-数据查询</a>
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/lxyfp4qn3o12og74?singleDoc#" target="_blank" rel="noopener">P02-05-数据替换</a>
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/cp0mt4uxuq7hqpog?singleDoc#" target="_blank" rel="noopener">P02-06-取消关联</a>
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/ddgs9d8h0vvaymy1?singleDoc#" target="_blank" rel="noopener">P02-07-生产统计</a>
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/tkf0nwho1n4blcoh?singleDoc#" target="_blank" rel="noopener">P02-08-数据上传</a>
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/ygp65d3ozkcby98i?singleDoc#" target="_blank" rel="noopener">P02-09-系统设置（2号机）</a>
+            <a class="ref-chip" href="https://miduo1031.yuque.com/rsaesz/dugniz/ptcmx259t88zblg4?singleDoc#" target="_blank" rel="noopener">P03-01-操作帮助</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>问题与对策</h3>
+        <div class="qa-empty-banner">本周无重大问题</div>
+      </div>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>下周计划</h3>
+        <ul class="plan-list">
+          <li>组织方案沟通会议，对齐方案细节和调整优化，推进项目立项流程</li>
+          <li>石湾第二条产线现场调研（预计2月26日，世博、喜胜、张冉）</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ========== 2026.02.14 ========== -->
+    <section class="week" id="week-2026-02-14" data-date="2026.02.14" data-headline="方案设计 50%">
+      <header class="week-head">
+        <div class="week-head-meta">
+          <span class="week-date">2026.02.14</span>
+        </div>
+        <h2 class="week-headline">方案设计 50%</h2>
+      </header>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>本周进展</h3>
+        <ul class="progress-list">
+          <li><strong class="hl">致美斋产线验收</strong>：验收工作已完成</li>
+          <li><strong class="hl">石湾产线信号灯调试</strong>：信号灯调试完成，遗留重复扫码问题，未通过验收，计划年后到场处理</li>
+          <li><strong class="hl">石湾赋码采集关联系统方案设计</strong>：
+            <ul>
+              <li>主文档已完成</li>
+              <li>完成瓶盒关联软件、盒箱垛关联软件方案设计</li>
+              <li>瓶盒软件子界面初步完成</li>
+            </ul>
+          </li>
+          <li><strong class="hl">重构计划沟通会议（2026.2.12）</strong>：
+            <ul>
+              <li>确定按上策执行：喜胜统筹，张冉配合，泽旗执行</li>
+              <li>问题反馈流程：问题先给到喜胜，未知问题张冉先过滤判断（需完善产线问题排查流程指引）。产线交接到4月1号前，旧软件问题由张冉兜底</li>
+              <li>张冉整理产线相关资料包，补充喜胜知识空白区</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>问题与对策</h3>
+
+        <div class="qa-pair">
+          <div class="qa-card qa-problem">
+            <div class="qa-head"><span class="qa-icon">!</span><span class="qa-label">问题</span><span class="qa-no">01</span></div>
+            <p class="qa-title">项目把控不足，历史问题咨询不及时</p>
+            <p class="qa-body">前期核心目标是完成石湾产线重构方案，但在方案设计过程中，对于历史产线产生的问题没有及时咨询张冉，导致在问题排查上浪费了很多时间。</p>
+          </div>
+          <div class="qa-arrow" aria-hidden="true"></div>
+          <div class="qa-card qa-action">
+            <div class="qa-head"><span class="qa-icon">✓</span><span class="qa-label">对策</span></div>
+            <ul class="qa-list">
+              <li>后续遇到历史产线相关问题时，及时与张冉沟通确认，避免从头到尾排查</li>
+              <li>在方案设计前，先梳理历史问题清单，提前咨询相关经验</li>
+              <li>将常规问题、高频问题等分类整理，在新版软件内提供帮助中心和教程说明，减少重复咨询和排查成本</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="qa-pair">
+          <div class="qa-card qa-problem">
+            <div class="qa-head"><span class="qa-icon">!</span><span class="qa-label">问题</span><span class="qa-no">02</span></div>
+            <p class="qa-title">瓶盒关联数据错乱风险</p>
+            <p class="qa-body">与张冉沟通过，瓶码数据读取后，再读盒码，中间如果发现盒包装破损，工人直接拿走，会导致数据错乱。旧版软件是基于PLC编码器判断的，新版软件仍需要陈智硬件配合。</p>
+          </div>
+          <div class="qa-arrow" aria-hidden="true"></div>
+          <div class="qa-card qa-action">
+            <div class="qa-head"><span class="qa-icon">✓</span><span class="qa-label">对策</span></div>
+            <ul class="qa-list">
+              <li>与陈智沟通，将瓶盒采集好的数据按要求传输</li>
+              <li>软件层面完善业务逻辑和数据校验，确保数据关联的准确性</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>下周计划</h3>
+        <ul class="plan-list">
+          <li>春节期间完成剩余子界面交互设计</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ========== 2026.02.07 ========== -->
+    <section class="week" id="week-2026-02-07" data-date="2026.02.07" data-headline="方案设计 20%">
+      <header class="week-head">
+        <div class="week-head-meta">
+          <span class="week-date">2026.02.07</span>
+        </div>
+        <h2 class="week-headline">方案设计 20%</h2>
+      </header>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>本周进展</h3>
+        <ul class="progress-list">
+          <li><strong class="hl">赋码采集关联系统方案设计</strong>：完成主文档初步设计，涵盖整体架构和核心业务流程</li>
+          <li><strong class="hl">产线问题跟进与处理</strong>：
+            <ul>
+              <li>石湾产线问题4个，已全部处理完成</li>
+              <li>桃林产线问题1个，待客户确认处理方式</li>
+              <li>玉林泉产线问题1个（上周遗留），本周已完结</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>问题与对策</h3>
+        <div class="qa-pair">
+          <div class="qa-card qa-problem">
+            <div class="qa-head"><span class="qa-icon">!</span><span class="qa-label">问题</span></div>
+            <p class="qa-title">致美斋现场工作安排调整，方案设计时间不足</p>
+            <p class="qa-body">周六到场致美斋进行产线验收，临时决定留宿至下周一回程。由于远程办公条件不足（临时决定没带电脑），导致赋码采集关联系统方案设计时间被压缩，子页面设计文档尚未完成审阅。</p>
+          </div>
+          <div class="qa-arrow" aria-hidden="true"></div>
+          <div class="qa-card qa-action">
+            <div class="qa-head"><span class="qa-icon">✓</span><span class="qa-label">对策</span></div>
+            <ul class="qa-list">
+              <li>周日抽时间完成子页面审阅工作</li>
+              <li>优先对齐整体设计和核心业务流程，确保方案框架完整</li>
+              <li>部分细节设计待后续时间（或春节期间）完善补充</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="week-section">
+        <h3 class="week-section-title"><span class="rule"></span>下周计划</h3>
+        <ul class="plan-list">
+          <li>致美斋产线验收完成后回程</li>
+          <li>石湾第二条产线到场调研（具体时间待定）</li>
+          <li>完成石湾赋码采集关联系统方案主文档，确保节前完成</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="weeks-footer">
+      <div class="weeks-footer-rule"></div>
+      <p class="weeks-footer-text">— 起始周 · 后续周报将持续追加 —</p>
+    </footer>
+
+  </main>
+
+</div>
+
+<script src="main.js" defer></script>
+</body>
+</html>

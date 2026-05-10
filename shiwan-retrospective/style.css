@@ -220,3 +220,41 @@
 .tpl-presenter-mode-reveal p {
   margin: 0 0 8px;
 }
+
+/* ============ 演讲提示条（speaker cue） ============
+ * 每页底部一行金句/关键词，作为讲者提词 + 观众金句双重作用
+ * 设计为低调装饰元素，不抢主内容焦点
+ */
+.tpl-presenter-mode-reveal .speaker-cue {
+  position: absolute;
+  bottom: 22px;
+  left: 80px;
+  right: 80px;
+  font-size: 11.5px;
+  font-family: var(--font-mono, monospace);
+  color: var(--text-3);
+  letter-spacing: 0.04em;
+  text-align: center;
+  opacity: 0.6;
+  pointer-events: none;
+  margin: 0;
+  line-height: 1.5;
+}
+.tpl-presenter-mode-reveal .speaker-cue::before {
+  content: "▸";
+  color: var(--accent-2, #1d4ed8);
+  font-weight: 700;
+  opacity: 0.85;
+  margin-right: 6px;
+  font-size: 12px;
+}
+.tpl-presenter-mode-reveal .speaker-cue strong {
+  color: var(--accent-2, #1d4ed8);
+  font-weight: 700;
+  opacity: 0.95;
+}
+
+/* deck-footer 存在时（封面/结语），cue 上移避免冲突 */
+.tpl-presenter-mode-reveal .slide:has(.deck-footer) .speaker-cue {
+  bottom: 56px;
+}
