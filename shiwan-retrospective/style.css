@@ -1,8 +1,8 @@
-/* 石湾项目复盘 PPT · 自定义样式补充
+/* 石湾 CCAS Owner 转型分享 deck · 自定义样式补充
  * 在 tpl-presenter-mode-reveal 基础上扩展几个用得上的卡片/分区样式
  */
 
-/* ============ 项目复盘专属：分隔/章节大字 ============ */
+/* ============ 本 deck 专属：分隔/章节大字 ============ */
 .tpl-presenter-mode-reveal .part-divider {
   display: flex;
   flex-direction: column;
