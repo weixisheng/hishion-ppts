@@ -3,6 +3,7 @@
  *
  * Features:
  *   ← → / space / PgUp PgDn / Home End  navigation
+ *   Bottom-right · on-screen Prev / Next buttons (mouse / touch), synced with keyboard
  *   F  fullscreen
  *   S  presenter mode (opens a NEW WINDOW with current/next slide preview + notes + timer)
  *       The original window stays as audience view, synced via BroadcastChannel.
@@ -125,6 +126,51 @@
       document.body.appendChild(bar);
     }
     const barFill = bar.querySelector('span');
+
+    /* ===== click / touch slide nav (floating buttons) ===== */
+    let deckNav = document.querySelector('.deck-nav');
+    let btnDeckPrev = null;
+    let btnDeckNext = null;
+    if (!deckNav) {
+      deckNav = document.createElement('div');
+      deckNav.className = 'deck-nav';
+      deckNav.setAttribute('role', 'toolbar');
+      deckNav.setAttribute('aria-label', '幻灯片翻页');
+      btnDeckPrev = document.createElement('button');
+      btnDeckPrev.type = 'button';
+      btnDeckPrev.className = 'deck-nav-btn deck-nav-prev';
+      btnDeckPrev.setAttribute('aria-label', '上一页');
+      btnDeckPrev.title = '上一页 (←)';
+      btnDeckPrev.innerHTML = '&#8249;';
+      btnDeckNext = document.createElement('button');
+      btnDeckNext.type = 'button';
+      btnDeckNext.className = 'deck-nav-btn deck-nav-next';
+      btnDeckNext.setAttribute('aria-label', '下一页');
+      btnDeckNext.title = '下一页 (→)';
+      btnDeckNext.innerHTML = '&#8250;';
+      deckNav.appendChild(btnDeckPrev);
+      deckNav.appendChild(btnDeckNext);
+      document.body.appendChild(deckNav);
+      btnDeckPrev.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        go(idx - 1);
+      });
+      btnDeckNext.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        go(idx + 1);
+      });
+    } else {
+      btnDeckPrev = deckNav.querySelector('.deck-nav-prev');
+      btnDeckNext = deckNav.querySelector('.deck-nav-next');
+    }
+
+    function updateDeckNavButtons() {
+      if (!btnDeckPrev || !btnDeckNext) return;
+      btnDeckPrev.disabled = idx <= 0;
+      btnDeckNext.disabled = idx >= total - 1;
+    }
 
     /* ===== notes overlay (N key) ===== */
     let notes = document.querySelector('.notes-overlay');
@@ -266,6 +312,8 @@
       if (!fromRemote && bc) {
         bc.postMessage({ type: 'go', idx: n });
       }
+
+      updateDeckNavButtons();
     }
 
     /* ===== listen for remote navigation / theme changes ===== */
