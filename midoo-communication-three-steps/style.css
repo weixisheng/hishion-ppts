@@ -1,0 +1,352 @@
+/* 新人培训「米多人沟通的三个步骤」deck */
+
+.tpl-presenter-mode-reveal .accent {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.tpl-presenter-mode-reveal .deck-footer-num-only {
+  justify-content: flex-end;
+}
+
+.tpl-presenter-mode-reveal .cover-byline {
+  font-size: clamp(17px, 2.1vw, 22px);
+  font-weight: 600;
+  color: var(--text-2);
+  letter-spacing: 0.06em;
+}
+
+.tpl-presenter-mode-reveal .agenda-row {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+.tpl-presenter-mode-reveal .agenda-row:last-child {
+  border-bottom: none;
+}
+.tpl-presenter-mode-reveal .agenda-row .num {
+  flex-shrink: 0;
+  width: 2em;
+  font-family: var(--font-mono, monospace);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.06em;
+  padding-top: 2px;
+}
+.tpl-presenter-mode-reveal .agenda-row .t {
+  font-size: 19px;
+  color: var(--text-2);
+  line-height: 1.45;
+  font-weight: 500;
+}
+
+.tpl-presenter-mode-reveal .compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 22px;
+}
+.tpl-presenter-mode-reveal .compare .col {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 22px;
+  background: var(--surface);
+}
+.tpl-presenter-mode-reveal .compare .col.bad {
+  border-top: 4px solid var(--bad);
+}
+.tpl-presenter-mode-reveal .compare .col.good {
+  border-top: 4px solid var(--good);
+}
+.tpl-presenter-mode-reveal .compare h5 {
+  margin: 0 0 12px;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-family: var(--font-mono, monospace);
+}
+.tpl-presenter-mode-reveal .compare .bad h5 {
+  color: var(--bad);
+}
+.tpl-presenter-mode-reveal .compare .good h5 {
+  color: var(--good);
+}
+.tpl-presenter-mode-reveal .compare ul {
+  margin: 0;
+  padding-left: 20px;
+}
+.tpl-presenter-mode-reveal .compare li {
+  font-size: 15px;
+  color: var(--text-2);
+  line-height: 1.65;
+  margin-bottom: 8px;
+}
+
+.tpl-presenter-mode-reveal .quote-block {
+  border-left: 4px solid var(--accent);
+  padding: 16px 24px;
+  margin-top: 28px;
+  background: var(--surface-2);
+  border-radius: 0 12px 12px 0;
+}
+.tpl-presenter-mode-reveal .quote-block p {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.58;
+  color: var(--text-1);
+  font-weight: 500;
+}
+
+.tpl-presenter-mode-reveal .list-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px 24px;
+  background: var(--surface);
+  height: 100%;
+}
+.tpl-presenter-mode-reveal .list-card h4 {
+  margin: 0 0 12px;
+  font-size: 17px;
+  color: var(--text-1);
+}
+.tpl-presenter-mode-reveal .list-card ul {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+}
+.tpl-presenter-mode-reveal .list-card li {
+  font-size: 15px;
+  color: var(--text-2);
+  line-height: 1.65;
+  padding-left: 18px;
+  margin-bottom: 8px;
+  position: relative;
+}
+.tpl-presenter-mode-reveal .list-card li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.tpl-presenter-mode-reveal .step-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 22px;
+  background: var(--surface);
+  border-top: 4px solid var(--accent);
+  height: 100%;
+}
+.tpl-presenter-mode-reveal .step-card .step-num {
+  font-family: var(--font-mono, monospace);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+.tpl-presenter-mode-reveal .step-card h4 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  color: var(--text-1);
+}
+.tpl-presenter-mode-reveal .step-card p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-2);
+  line-height: 1.6;
+}
+
+.tpl-presenter-mode-reveal .grid.g3narrow {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+@media (max-width: 1200px) {
+  .tpl-presenter-mode-reveal .grid.g3narrow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.tpl-presenter-mode-reveal .template-block {
+  font-family: var(--font-mono, monospace);
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text-2);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 22px;
+  margin-top: 18px;
+  white-space: pre-wrap;
+}
+
+.tpl-presenter-mode-reveal .prompt-box {
+  border-radius: 10px;
+  padding: 16px 20px;
+  font-size: 14px;
+  line-height: 1.65;
+  margin-top: 14px;
+}
+.tpl-presenter-mode-reveal .prompt-box.bad {
+  background: color-mix(in srgb, var(--bad) 8%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--bad) 35%, var(--border));
+  color: var(--text-2);
+}
+.tpl-presenter-mode-reveal .prompt-box.good {
+  background: color-mix(in srgb, var(--good) 8%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--good) 35%, var(--border));
+  color: var(--text-2);
+}
+.tpl-presenter-mode-reveal .prompt-label {
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+  display: block;
+}
+.tpl-presenter-mode-reveal .prompt-box.bad .prompt-label {
+  color: var(--bad);
+}
+.tpl-presenter-mode-reveal .prompt-box.good .prompt-label {
+  color: var(--good);
+}
+
+.tpl-presenter-mode-reveal .speaker-cue {
+  position: absolute;
+  bottom: 22px;
+  left: 80px;
+  right: 80px;
+  font-size: 11.5px;
+  font-family: var(--font-mono, monospace);
+  color: var(--text-3);
+  letter-spacing: 0.04em;
+  text-align: center;
+  opacity: 0.65;
+  pointer-events: none;
+  margin: 0;
+  line-height: 1.5;
+}
+.tpl-presenter-mode-reveal .speaker-cue::before {
+  content: "▸";
+  color: var(--accent);
+  font-weight: 700;
+  margin-right: 6px;
+}
+.tpl-presenter-mode-reveal .speaker-cue strong {
+  color: var(--accent);
+}
+
+.tpl-presenter-mode-reveal .slide {
+  padding: 56px 80px;
+}
+.tpl-presenter-mode-reveal .slide:has(.deck-footer) .speaker-cue {
+  bottom: 56px;
+}
+
+.tpl-presenter-mode-reveal .badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+.tpl-presenter-mode-reveal .badge-row .pill {
+  font-size: 13px;
+}
+
+.tpl-presenter-mode-reveal .case-scenario {
+  font-size: 14px;
+  color: var(--text-2);
+  line-height: 1.55;
+  margin-top: 14px;
+  padding: 12px 16px;
+  background: var(--surface-2);
+  border-radius: 8px;
+  border-left: 3px solid var(--accent);
+}
+.tpl-presenter-mode-reveal .case-scenario strong {
+  color: var(--text-1);
+}
+.tpl-presenter-mode-reveal .example-script {
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: var(--text-2);
+  margin-top: 12px;
+  white-space: pre-wrap;
+}
+.tpl-presenter-mode-reveal .compare .example-script {
+  margin-top: 0;
+}
+.tpl-presenter-mode-reveal .compare.compact .col {
+  padding: 16px 18px;
+}
+.tpl-presenter-mode-reveal .compare.compact h5 {
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+.tpl-presenter-mode-reveal .example-script .tag {
+  display: inline-block;
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 1px 6px;
+  border-radius: 4px;
+  margin-right: 4px;
+  vertical-align: baseline;
+}
+.tpl-presenter-mode-reveal .example-script .tag-c {
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  color: var(--accent);
+}
+.tpl-presenter-mode-reveal .example-script .tag-p {
+  background: color-mix(in srgb, var(--text-3) 20%, transparent);
+  color: var(--text-2);
+}
+.tpl-presenter-mode-reveal .example-script .tag-s {
+  background: color-mix(in srgb, var(--good) 15%, transparent);
+  color: var(--good);
+}
+
+.tpl-presenter-mode-reveal .example-good-panel {
+  border: 1px solid var(--border);
+  border-top: 4px solid var(--good);
+  border-radius: 12px;
+  padding: 16px 18px;
+  background: var(--surface);
+  margin-top: 14px;
+}
+.tpl-presenter-mode-reveal .example-good-panel h5 {
+  margin: 0 0 10px;
+  font-size: 13px;
+  font-family: var(--font-mono, monospace);
+  color: var(--good);
+  letter-spacing: 0.04em;
+}
+
+.tpl-presenter-mode-reveal .culture-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 28px;
+}
+.tpl-presenter-mode-reveal .culture-steps .step-pill {
+  padding: 14px 22px;
+  border-radius: 999px;
+  border: 2px solid var(--accent);
+  background: var(--surface);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text-1);
+}
+.tpl-presenter-mode-reveal .culture-steps .arrow {
+  font-size: 20px;
+  color: var(--accent);
+  font-weight: 700;
+}
