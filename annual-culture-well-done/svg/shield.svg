@@ -1,32 +1,56 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 190" width="220" height="190" role="img" aria-label="risk control before launch">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 190" width="220" height="190" role="img" aria-label="production owner decision board">
   <defs>
     <linearGradient id="sh-blob" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eef3ff"/><stop offset="1" stop-color="#e1e9ff"/></linearGradient>
-    <linearGradient id="sh-face" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#dfe8ff"/><stop offset="1" stop-color="#cbd8ff"/></linearGradient>
-    <linearGradient id="sh-lock" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b6cff"/><stop offset="1" stop-color="#7a5cff"/></linearGradient>
-    <filter id="sh-sh" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#26336a" flood-opacity="0.16"/></filter>
+    <linearGradient id="sh-board" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#f4f7ff"/></linearGradient>
+    <linearGradient id="sh-accent" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b6cff"/><stop offset="1" stop-color="#7a5cff"/></linearGradient>
+    <filter id="sh-sh" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#26336a" flood-opacity="0.14"/></filter>
   </defs>
   <rect x="8" y="8" width="204" height="174" rx="22" fill="url(#sh-blob)" stroke="#dde6fa" stroke-width="1.5"/>
-  <g>
-    <circle r="11" fill="#e0445a">
-      <animateMotion path="M110 -8 L110 36 L172 26" dur="2.8s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.18;0.5;0.68;1" dur="2.8s" repeatCount="indefinite"/>
-    </circle>
-    <g>
-      <rect x="108.5" y="-15" width="3" height="11" rx="1.5" fill="#ffffff"/>
-      <circle cx="110" cy="0" r="2" fill="#ffffff"/>
-      <animateMotion path="M110 -8 L110 36 L172 26" dur="2.8s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.18;0.5;0.68;1" dur="2.8s" repeatCount="indefinite"/>
-    </g>
-  </g>
   <g filter="url(#sh-sh)">
-    <path d="M110 36 L166 58 V106 C166 140 139 166 110 178 C81 166 54 140 54 106 V58 Z" fill="url(#sh-face)" stroke="#7a5cff" stroke-width="3"/>
+    <rect x="28" y="30" width="164" height="118" rx="14" fill="url(#sh-board)"/>
   </g>
-  <path d="M110 36 L54 58 V106 C54 140 81 166 110 178 Z" fill="#bcccff" opacity="0.45"/>
-  <path d="M110 36 L166 58 V106 C166 140 139 166 110 178 C81 166 54 140 54 106 V58 Z" fill="none" stroke="#7a5cff" stroke-width="3" opacity="0">
-    <animate attributeName="opacity" values="0;0.55;0" dur="2.8s" repeatCount="indefinite"/>
-  </path>
-  <path d="M99 100 V90 a11 11 0 0 1 22 0 V100" fill="none" stroke="#3b6cff" stroke-width="5" stroke-linecap="round"/>
-  <rect x="92" y="100" width="36" height="30" rx="6" fill="url(#sh-lock)"/>
-  <circle cx="110" cy="112" r="4" fill="#ffffff"/>
-  <rect x="108.5" y="114" width="3" height="8" rx="1.5" fill="#ffffff"/>
+  <rect x="28" y="30" width="164" height="24" rx="14" fill="#dfe8ff"/>
+  <circle cx="43" cy="42" r="3" fill="#e0445a"/>
+  <circle cx="54" cy="42" r="3" fill="#f5a524"/>
+  <circle cx="65" cy="42" r="3" fill="#1aaf6c"/>
+  <rect x="80" y="38" width="82" height="8" rx="4" fill="#b9c9ff"/>
+
+  <g>
+    <rect x="40" y="68" width="44" height="44" rx="10" fill="#fff5f5" stroke="#f2c8c8" stroke-width="1.5"/>
+    <path d="M62 78 L76 104 H48 Z" fill="#e0445a" opacity="0.9"/>
+    <rect x="56" y="88" width="12" height="4" rx="2" fill="#ffffff"/>
+    <rect x="57" y="96" width="10" height="4" rx="2" fill="#ffffff"/>
+  </g>
+
+  <g>
+    <rect x="136" y="68" width="44" height="44" rx="10" fill="#eefaf4" stroke="#b7e8cf" stroke-width="1.5"/>
+    <rect x="149" y="82" width="18" height="22" rx="4" fill="#1aaf6c"/>
+    <rect x="153" y="76" width="10" height="8" rx="3" fill="none" stroke="#1aaf6c" stroke-width="3"/>
+    <circle cx="158" cy="93" r="3" fill="#ffffff"/>
+  </g>
+
+  <g>
+    <path d="M86 90 H132" fill="none" stroke="#cdd9f7" stroke-width="8" stroke-linecap="round"/>
+    <path d="M118 78 L134 90 L118 102" fill="none" stroke="url(#sh-accent)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle r="5" fill="#7a5cff">
+      <animateMotion path="M88 90 H130" dur="2.2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.18;0.82;1" dur="2.2s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <g filter="url(#sh-sh)">
+    <rect x="54" y="126" width="112" height="34" rx="12" fill="#ffffff"/>
+  </g>
+  <circle cx="74" cy="143" r="9" fill="url(#sh-accent)"/>
+  <path d="M70 143 l3 3 l6 -7" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="90" y="136" width="54" height="6" rx="3" fill="#cdd9f7"/>
+  <rect x="90" y="148" width="38" height="6" rx="3" fill="#b9c9ff"/>
+  <g>
+    <path d="M172 126 L184 132 L172 138 Z" fill="#f5a524">
+      <animate attributeName="opacity" values="0.4;1;0.4" dur="2.4s" repeatCount="indefinite"/>
+    </path>
+    <path d="M42 126 L34 134 L42 142" fill="none" stroke="#7a5cff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <animate attributeName="opacity" values="1;0.4;1" dur="2.4s" repeatCount="indefinite"/>
+    </path>
+  </g>
 </svg>

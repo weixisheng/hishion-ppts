@@ -665,6 +665,47 @@ ul { margin: 0; padding: 0; list-style: none; }
   min-width: 0;
 }
 
+.intro-card {
+  position: relative;
+  margin: 24px 0 48px;
+  padding: 26px 30px 28px;
+  background:
+    linear-gradient(135deg, var(--accent-soft), transparent 42%),
+    var(--bg-1);
+  border: 1px solid var(--border-2);
+  border-left: 3px solid var(--accent);
+  border-radius: 10px;
+  box-shadow: var(--shadow-card);
+}
+
+.intro-card::after {
+  content: "";
+  position: absolute;
+  right: 22px;
+  top: 22px;
+  width: 54px;
+  height: 54px;
+  border: 1px solid var(--accent-line);
+  border-radius: 50%;
+  opacity: .45;
+}
+
+.intro-kicker {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: .2em;
+  color: var(--accent);
+  margin: 0 0 12px;
+}
+
+.intro-text {
+  margin: 0;
+  max-width: 72ch;
+  color: var(--fg-2);
+  font-size: 15px;
+  line-height: 1.9;
+}
+
 .week {
   padding: 88px 0 24px;
   position: relative;

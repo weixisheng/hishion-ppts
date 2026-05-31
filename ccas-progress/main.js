@@ -152,18 +152,21 @@
       }
     }
 
-    /* IntersectionObserver: 当 week 进入页面中部窄带时认为是激活的；
-       使用单一阈值 + 窄 rootMargin 避免触发过于频繁导致卡顿 */
-    const activeObs = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) setActive(e.target.id);
-      });
-    }, {
-      rootMargin: '-35% 0px -55% 0px',
-      threshold: 0
-    });
+    /* 使用顶部阅读线判断当前周。
+       之前用 IntersectionObserver 的中部窄带，在某一周内容很长时会提前命中下一周，
+       造成左侧高亮和右侧正在阅读的内容错位。 */
+    function updateActiveFromScroll() {
+      const marker = window.scrollY + 120;
+      let nextId = weeks[0].id;
 
-    weeks.forEach(function (w) { activeObs.observe(w); });
+      for (let i = 0; i < weeks.length; i += 1) {
+        const top = weeks[i].getBoundingClientRect().top + window.scrollY;
+        if (marker >= top) nextId = weeks[i].id;
+        else break;
+      }
+
+      setActive(nextId);
+    }
 
     /* ===== 4. 周卡片首次进入视口时淡入 reveal ===== */
     const revealObs = new IntersectionObserver(function (entries) {
@@ -193,6 +196,7 @@
       if (progressRaf) return;
       progressRaf = window.requestAnimationFrame(function () {
         updateProgress();
+        updateActiveFromScroll();
         progressRaf = null;
       });
     }, { passive: true });
@@ -201,6 +205,7 @@
 
     /* ===== 6. 初始化首个周作为当前 ===== */
     setActive(weeks[0].id);
+    updateActiveFromScroll();
 
     /* ===== 7. 键盘上下箭头 / J K 在周间跳转 ===== */
     window.addEventListener('keydown', function (e) {
@@ -233,11 +238,11 @@
     try {
       const s = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
       return {
-        mode:   s.mode   || document.documentElement.dataset.mode   || 'dark',
+        mode:   s.mode   || document.documentElement.dataset.mode   || 'light',
         accent: s.accent || document.documentElement.dataset.accent || 'amber'
       };
     } catch (e) {
-      return { mode: 'dark', accent: 'amber' };
+      return { mode: 'light', accent: 'amber' };
     }
   }
 
