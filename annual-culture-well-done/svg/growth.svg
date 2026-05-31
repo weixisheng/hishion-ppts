@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 180" width="240" height="180" role="img" aria-label="career growth path">
+  <defs>
+    <linearGradient id="gr-blob" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eef3ff"/><stop offset="1" stop-color="#e1e9ff"/></linearGradient>
+    <linearGradient id="gr-bar" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#3b6cff"/><stop offset="1" stop-color="#7a5cff"/></linearGradient>
+    <filter id="gr-sh" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#26336a" flood-opacity="0.14"/></filter>
+  </defs>
+  <rect x="8" y="8" width="224" height="164" rx="22" fill="url(#gr-blob)" stroke="#dde6fa" stroke-width="1.5"/>
+  <line x1="40" y1="150" x2="200" y2="150" stroke="#cdd9f7" stroke-width="3" stroke-linecap="round"/>
+  <g filter="url(#gr-sh)">
+    <rect x="50" y="116" width="40" height="34" rx="6" fill="#9fb4ff"/>
+    <rect x="100" y="90" width="40" height="60" rx="6" fill="#6f86ff"/>
+    <rect x="150" y="60" width="40" height="90" rx="6" fill="url(#gr-bar)"/>
+  </g>
+  <g stroke="#ffffff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M65 129 l-5 4 l5 4 M75 129 l5 4 l-5 4"/>
+    <path d="M111 108 h18 M111 116 h18 M111 124 h18"/>
+  </g>
+  <circle cx="170" cy="94" r="8" fill="none" stroke="#ffffff" stroke-width="3"/>
+  <circle cx="170" cy="94" r="2.5" fill="#ffffff"/>
+  <g>
+    <line x1="170" y1="60" x2="170" y2="38" stroke="#2b3350" stroke-width="3" stroke-linecap="round"/>
+    <path d="M170 40 L192 46 L170 52 Z" fill="#f5a524">
+      <animate attributeName="d" values="M170 40 L192 46 L170 52 Z;M170 40 L189 50 L170 52 Z;M170 40 L192 46 L170 52 Z" dur="2s" repeatCount="indefinite"/>
+    </path>
+  </g>
+  <path d="M70 116 L120 90 L170 60" fill="none" stroke="#7a5cff" stroke-width="2.5" stroke-dasharray="3 5" opacity="0.5"/>
+  <circle r="5.5" fill="#7a5cff">
+    <animateMotion path="M70 116 L120 90 L170 60" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.85;1" dur="3s" repeatCount="indefinite"/>
+  </circle>
+</svg>

@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 180" width="240" height="180" role="img" aria-label="production line scanning">
+  <defs>
+    <linearGradient id="ln-blob" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eef3ff"/><stop offset="1" stop-color="#e1e9ff"/></linearGradient>
+    <linearGradient id="ln-head" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b6cff"/><stop offset="1" stop-color="#7a5cff"/></linearGradient>
+    <linearGradient id="ln-beam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a5cff" stop-opacity="0.4"/><stop offset="1" stop-color="#7a5cff" stop-opacity="0"/></linearGradient>
+    <filter id="ln-sh" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#26336a" flood-opacity="0.14"/></filter>
+  </defs>
+  <rect x="8" y="8" width="224" height="164" rx="22" fill="url(#ln-blob)" stroke="#dde6fa" stroke-width="1.5"/>
+  <rect x="76" y="30" width="84" height="12" rx="4" fill="#6f86ff"/>
+  <rect x="78" y="42" width="8" height="80" rx="3" fill="#9fb4ff"/>
+  <rect x="150" y="42" width="8" height="80" rx="3" fill="#9fb4ff"/>
+  <rect x="106" y="42" width="24" height="16" rx="4" fill="url(#ln-head)"/>
+  <path d="M108 58 L128 58 L140 120 L96 120 Z" fill="url(#ln-beam)">
+    <animate attributeName="opacity" values="0.5;1;0.5" dur="1.6s" repeatCount="indefinite"/>
+  </path>
+  <rect x="20" y="126" width="200" height="14" rx="7" fill="#cdd9f7"/>
+  <circle cx="38" cy="150" r="6" fill="#b9c9ff"/>
+  <circle cx="80" cy="150" r="6" fill="#b9c9ff"/>
+  <circle cx="122" cy="150" r="6" fill="#b9c9ff"/>
+  <circle cx="164" cy="150" r="6" fill="#b9c9ff"/>
+  <circle cx="202" cy="150" r="6" fill="#b9c9ff"/>
+  <g filter="url(#ln-sh)">
+    <g>
+      <rect x="0" y="98" width="36" height="28" rx="4" fill="#b9c9ff"/>
+      <rect x="0" y="98" width="36" height="9" rx="4" fill="#9fb4ff"/>
+      <rect x="14" y="98" width="8" height="28" fill="#dde7ff"/>
+      <animateTransform attributeName="transform" type="translate" from="-46 0" to="262 0" dur="4.6s" repeatCount="indefinite"/>
+    </g>
+  </g>
+  <g filter="url(#ln-sh)">
+    <g>
+      <rect x="0" y="98" width="36" height="28" rx="4" fill="#dde7ff"/>
+      <rect x="0" y="98" width="36" height="9" rx="4" fill="#b9c9ff"/>
+      <rect x="14" y="98" width="8" height="28" fill="#eef3ff"/>
+      <animateTransform attributeName="transform" type="translate" from="-46 0" to="262 0" dur="4.6s" begin="-2.3s" repeatCount="indefinite"/>
+    </g>
+  </g>
+  <g filter="url(#ln-sh)">
+    <rect x="184" y="52" width="48" height="44" rx="9" fill="#ffffff"/>
+  </g>
+  <rect x="192" y="60" width="20" height="4" rx="2" fill="#cdd9f7"/>
+  <rect x="192" y="84" width="6" height="6" rx="1.5" fill="#3b6cff"/>
+  <rect x="202" y="80" width="6" height="10" rx="1.5" fill="#5a6bff"/>
+  <rect x="212" y="74" width="6" height="16" rx="1.5" fill="#7a5cff"/>
+  <circle cx="224" cy="62" r="3" fill="#2fd07a">
+    <animate attributeName="opacity" values="1;0.2;1" dur="1.4s" repeatCount="indefinite"/>
+  </circle>
+</svg>

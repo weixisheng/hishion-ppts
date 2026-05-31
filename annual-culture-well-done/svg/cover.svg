@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 200" width="220" height="200" role="img" aria-label="excellence trophy">
+  <defs>
+    <linearGradient id="cv-blob" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#eef3ff"/><stop offset="1" stop-color="#e1e9ff"/>
+    </linearGradient>
+    <linearGradient id="cv-gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffe3a0"/><stop offset="1" stop-color="#f3a01f"/>
+    </linearGradient>
+    <filter id="cv-sh" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#26336a" flood-opacity="0.16"/>
+    </filter>
+  </defs>
+  <rect x="8" y="8" width="204" height="184" rx="24" fill="url(#cv-blob)" stroke="#dde6fa" stroke-width="1.5"/>
+  <ellipse cx="110" cy="170" rx="46" ry="9" fill="#26336a" opacity="0.12"/>
+  <g filter="url(#cv-sh)">
+    <g>
+      <path d="M78 70 C58 72 58 100 80 100" fill="none" stroke="#e8941a" stroke-width="7" stroke-linecap="round"/>
+      <path d="M142 70 C162 72 162 100 140 100" fill="none" stroke="#e8941a" stroke-width="7" stroke-linecap="round"/>
+      <path d="M78 66 C78 106 96 126 110 126 C124 126 142 106 142 66 Z" fill="url(#cv-gold)"/>
+      <ellipse cx="110" cy="66" rx="32" ry="7" fill="#ffe9b8"/>
+      <rect x="103" y="126" width="14" height="13" fill="#e8941a"/>
+      <path d="M90 139 L130 139 L134 152 L86 152 Z" fill="url(#cv-gold)"/>
+      <rect x="82" y="152" width="56" height="11" rx="3" fill="#e8941a"/>
+      <path d="M110 77 L113.2 85.5 L122.4 86 L115.2 91.7 L117.6 100.5 L110 95.5 L102.4 100.5 L104.8 91.7 L97.6 86 L106.8 85.5 Z" fill="#ffffff" opacity="0.95"/>
+      <animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="3.2s" repeatCount="indefinite"/>
+    </g>
+  </g>
+  <g fill="#f5a524">
+    <path d="M58 58 Q59 51 66 50 Q59 49 58 42 Q57 49 50 50 Q57 51 58 58 Z">
+      <animate attributeName="opacity" values="0.2;1;0.2" dur="2.2s" repeatCount="indefinite"/>
+    </path>
+    <path d="M174 78 Q175 72 181 71 Q175 70 174 64 Q173 70 167 71 Q173 72 174 78 Z">
+      <animate attributeName="opacity" values="1;0.2;1" dur="2.6s" repeatCount="indefinite"/>
+    </path>
+    <path d="M166 150 Q167 145 172 144 Q167 143 166 138 Q165 143 160 144 Q165 145 166 150 Z">
+      <animate attributeName="opacity" values="0.3;1;0.3" dur="3s" repeatCount="indefinite"/>
+    </path>
+  </g>
+</svg>

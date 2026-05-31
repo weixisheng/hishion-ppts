@@ -190,3 +190,28 @@
 .tpl-presenter-mode-reveal .badge-row .pill {
   font-size: 13px;
 }
+
+/* ===== 动态配图 illustrations ===== */
+.tpl-presenter-mode-reveal .slide-illu {
+  position: absolute;
+  top: 44px;
+  right: 64px;
+  width: 196px;
+  height: auto;
+  z-index: 1;
+  pointer-events: none;
+}
+.tpl-presenter-mode-reveal .slide-illu.is-hero {
+  width: 216px;
+  top: 40px;
+}
+@media (max-width: 1200px) {
+  .tpl-presenter-mode-reveal .slide-illu {
+    width: 144px;
+    top: 26px;
+    right: 32px;
+  }
+  .tpl-presenter-mode-reveal .slide-illu.is-hero {
+    width: 164px;
+  }
+}

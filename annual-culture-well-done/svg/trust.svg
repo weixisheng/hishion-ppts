@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 180" width="240" height="180" role="img" aria-label="reference reuse">
+  <defs>
+    <linearGradient id="tr-blob" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eef3ff"/><stop offset="1" stop-color="#e1e9ff"/></linearGradient>
+    <filter id="tr-sh" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#26336a" flood-opacity="0.15"/></filter>
+  </defs>
+  <rect x="8" y="8" width="224" height="164" rx="22" fill="url(#tr-blob)" stroke="#dde6fa" stroke-width="1.5"/>
+  <g filter="url(#tr-sh)">
+    <rect x="34" y="40" width="78" height="100" rx="9" fill="#ffffff"/>
+  </g>
+  <rect x="46" y="54" width="54" height="6" rx="3" fill="#cdd9f7"/>
+  <rect x="46" y="66" width="54" height="6" rx="3" fill="#cdd9f7"/>
+  <rect x="46" y="78" width="38" height="6" rx="3" fill="#cdd9f7"/>
+  <g transform="translate(76 114)">
+    <g>
+      <circle r="18" fill="#e0445a"/>
+      <circle r="13" fill="none" stroke="#ffffff" stroke-width="2"/>
+      <path d="M0 -6 L1.47 -2.02 L5.7 -1.85 L2.38 0.77 L3.5 4.85 L0 2.5 L-3.5 4.85 L-2.38 0.77 L-5.7 -1.85 L-1.47 -2.02 Z" fill="#ffffff"/>
+      <animateTransform attributeName="transform" type="scale" values="1.6;1;1;1;1.6" keyTimes="0;0.18;0.6;0.85;1" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;1;1;0" keyTimes="0;0.18;0.6;0.85;1" dur="3s" repeatCount="indefinite"/>
+    </g>
+  </g>
+  <g filter="url(#tr-sh)">
+    <rect x="150" y="40" width="78" height="100" rx="9" fill="#f4f7ff"/>
+  </g>
+  <rect x="162" y="62" width="54" height="6" rx="3" fill="#c3c9f7"/>
+  <rect x="162" y="74" width="54" height="6" rx="3" fill="#c3c9f7"/>
+  <rect x="162" y="86" width="38" height="6" rx="3" fill="#c3c9f7"/>
+  <rect x="162" y="98" width="48" height="6" rx="3" fill="#c3c9f7"/>
+  <g transform="translate(212 50)">
+    <path d="M0 -8 L1.82 -2.51 L7.6 -2.47 L2.95 0.96 L4.7 6.47 L0 3.1 L-4.7 6.47 L-2.95 0.96 L-7.6 -2.47 L-1.82 -2.51 Z" fill="#f5a524">
+      <animate attributeName="opacity" values="0.5;1;0.5" dur="2.2s" repeatCount="indefinite"/>
+    </path>
+  </g>
+  <path d="M116 90 H146" stroke="#7a5cff" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M140 84 L148 90 L140 96" fill="none" stroke="#7a5cff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle r="4" fill="#3b6cff">
+    <animateMotion path="M116 90 H146" dur="1.8s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;1;0" dur="1.8s" repeatCount="indefinite"/>
+  </circle>
+</svg>
