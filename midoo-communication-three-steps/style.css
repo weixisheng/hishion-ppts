@@ -5,12 +5,36 @@
   font-weight: 700;
 }
 
+.tpl-presenter-mode-reveal .kicker {
+  font-size: 15px;
+  letter-spacing: 0.12em;
+}
+
+.tpl-presenter-mode-reveal .h1 {
+  font-size: clamp(58px, 7.4vw, 88px);
+  line-height: 1.04;
+}
+
+.tpl-presenter-mode-reveal .h2 {
+  font-size: clamp(40px, 5.1vw, 58px);
+  line-height: 1.08;
+}
+
+.tpl-presenter-mode-reveal .lede {
+  font-size: clamp(22px, 2.55vw, 30px);
+  line-height: 1.45;
+}
+
+.tpl-presenter-mode-reveal .pill {
+  font-size: 15px;
+}
+
 .tpl-presenter-mode-reveal .deck-footer-num-only {
   justify-content: flex-end;
 }
 
 .tpl-presenter-mode-reveal .cover-byline {
-  font-size: clamp(17px, 2.1vw, 22px);
+  font-size: clamp(19px, 2.2vw, 24px);
   font-weight: 600;
   color: var(--text-2);
   letter-spacing: 0.06em;
@@ -30,14 +54,14 @@
   flex-shrink: 0;
   width: 2em;
   font-family: var(--font-mono, monospace);
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
   color: var(--accent);
   letter-spacing: 0.06em;
   padding-top: 2px;
 }
 .tpl-presenter-mode-reveal .agenda-row .t {
-  font-size: 19px;
+  font-size: 21px;
   color: var(--text-2);
   line-height: 1.45;
   font-weight: 500;
@@ -63,7 +87,7 @@
 }
 .tpl-presenter-mode-reveal .compare h5 {
   margin: 0 0 12px;
-  font-size: 15px;
+  font-size: 18px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   font-family: var(--font-mono, monospace);
@@ -79,10 +103,10 @@
   padding-left: 20px;
 }
 .tpl-presenter-mode-reveal .compare li {
-  font-size: 15px;
+  font-size: 18.5px;
   color: var(--text-2);
-  line-height: 1.65;
-  margin-bottom: 8px;
+  line-height: 1.58;
+  margin-bottom: 9px;
 }
 
 .tpl-presenter-mode-reveal .quote-block {
@@ -94,7 +118,7 @@
 }
 .tpl-presenter-mode-reveal .quote-block p {
   margin: 0;
-  font-size: 20px;
+  font-size: 22px;
   line-height: 1.58;
   color: var(--text-1);
   font-weight: 500;
@@ -109,7 +133,7 @@
 }
 .tpl-presenter-mode-reveal .list-card h4 {
   margin: 0 0 12px;
-  font-size: 17px;
+  font-size: 22px;
   color: var(--text-1);
 }
 .tpl-presenter-mode-reveal .list-card ul {
@@ -118,11 +142,11 @@
   list-style: none;
 }
 .tpl-presenter-mode-reveal .list-card li {
-  font-size: 15px;
+  font-size: 18.5px;
   color: var(--text-2);
-  line-height: 1.65;
+  line-height: 1.58;
   padding-left: 18px;
-  margin-bottom: 8px;
+  margin-bottom: 9px;
   position: relative;
 }
 .tpl-presenter-mode-reveal .list-card li::before {
@@ -143,7 +167,7 @@
 }
 .tpl-presenter-mode-reveal .step-card .step-num {
   font-family: var(--font-mono, monospace);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   color: var(--accent);
   letter-spacing: 0.08em;
@@ -151,14 +175,14 @@
 }
 .tpl-presenter-mode-reveal .step-card h4 {
   margin: 0 0 10px;
-  font-size: 18px;
+  font-size: 23px;
   color: var(--text-1);
 }
 .tpl-presenter-mode-reveal .step-card p {
   margin: 0;
-  font-size: 14px;
+  font-size: 18px;
   color: var(--text-2);
-  line-height: 1.6;
+  line-height: 1.56;
 }
 
 .tpl-presenter-mode-reveal .grid.g3narrow {
@@ -187,8 +211,8 @@
 .tpl-presenter-mode-reveal .prompt-box {
   border-radius: 10px;
   padding: 16px 20px;
-  font-size: 14px;
-  line-height: 1.65;
+  font-size: 15.5px;
+  line-height: 1.62;
   margin-top: 14px;
 }
 .tpl-presenter-mode-reveal .prompt-box.bad {
@@ -203,7 +227,7 @@
 }
 .tpl-presenter-mode-reveal .prompt-label {
   font-family: var(--font-mono, monospace);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.06em;
   margin-bottom: 8px;
@@ -242,7 +266,7 @@
 }
 
 .tpl-presenter-mode-reveal .slide {
-  padding: 56px 80px;
+  padding: 52px 72px;
 }
 .tpl-presenter-mode-reveal .slide:has(.deck-footer) .speaker-cue {
   bottom: 56px;
@@ -258,8 +282,23 @@
   font-size: 13px;
 }
 
+.tpl-presenter-mode-reveal .case-source {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  margin: 10px 0 0;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text-2);
+  font-size: 15.5px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
 .tpl-presenter-mode-reveal .case-scenario {
-  font-size: 14px;
+  font-size: 16px;
   color: var(--text-2);
   line-height: 1.55;
   margin-top: 14px;
@@ -272,8 +311,8 @@
   color: var(--text-1);
 }
 .tpl-presenter-mode-reveal .example-script {
-  font-size: 12.5px;
-  line-height: 1.65;
+  font-size: 14px;
+  line-height: 1.58;
   color: var(--text-2);
   margin-top: 12px;
   white-space: pre-wrap;
@@ -286,12 +325,12 @@
 }
 .tpl-presenter-mode-reveal .compare.compact h5 {
   margin-bottom: 10px;
-  font-size: 13px;
+  font-size: 14px;
 }
 .tpl-presenter-mode-reveal .example-script .tag {
   display: inline-block;
   font-family: var(--font-mono, monospace);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.04em;
   padding: 1px 6px;
@@ -322,7 +361,7 @@
 }
 .tpl-presenter-mode-reveal .example-good-panel h5 {
   margin: 0 0 10px;
-  font-size: 13px;
+  font-size: 14px;
   font-family: var(--font-mono, monospace);
   color: var(--good);
   letter-spacing: 0.04em;
@@ -341,7 +380,7 @@
   border-radius: 999px;
   border: 2px solid var(--accent);
   background: var(--surface);
-  font-size: 17px;
+  font-size: 20px;
   font-weight: 600;
   color: var(--text-1);
 }
