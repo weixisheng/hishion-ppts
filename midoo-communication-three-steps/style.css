@@ -1,45 +1,68 @@
-/* 新人培训「米多人沟通的三个步骤」deck */
+/* 新人培训「米多人沟通的三个步骤」deck — 排版对齐 annual-culture-well-done */
 
 .tpl-presenter-mode-reveal .accent {
   color: var(--accent);
   font-weight: 700;
 }
 
-.tpl-presenter-mode-reveal .kicker {
-  font-size: 15px;
-  letter-spacing: 0.12em;
-}
-
-.tpl-presenter-mode-reveal .h1 {
-  font-size: clamp(58px, 7.4vw, 88px);
-  line-height: 1.04;
-}
-
-.tpl-presenter-mode-reveal .h2 {
-  font-size: clamp(40px, 5.1vw, 58px);
-  line-height: 1.08;
-}
-
-.tpl-presenter-mode-reveal .lede {
-  font-size: clamp(22px, 2.55vw, 30px);
-  line-height: 1.45;
-}
-
-.tpl-presenter-mode-reveal .pill {
-  font-size: 15px;
-}
-
 .tpl-presenter-mode-reveal .deck-footer-num-only {
   justify-content: flex-end;
 }
 
+/* —— 标题层级（与 annual-culture-well-done 一致）—— */
+.tpl-presenter-mode-reveal .h1 {
+  font-size: 88px;
+}
+
+.tpl-presenter-mode-reveal .h2 {
+  font-size: 68px;
+  line-height: 1.08;
+}
+
+.tpl-presenter-mode-reveal .kicker {
+  font-size: 18px;
+}
+
+.tpl-presenter-mode-reveal .lede {
+  font-size: 30px;
+  line-height: 1.5;
+}
+
 .tpl-presenter-mode-reveal .cover-byline {
-  font-size: clamp(19px, 2.2vw, 24px);
+  font-size: clamp(22px, 2.6vw, 28px);
   font-weight: 600;
   color: var(--text-2);
   letter-spacing: 0.06em;
 }
 
+.tpl-presenter-mode-reveal .cover-slide {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 78px 92px 122px;
+}
+.tpl-presenter-mode-reveal .cover-slide > :not(.speaker-cue):not(.deck-footer):not(.notes) {
+  position: relative;
+  z-index: 1;
+  max-width: 980px;
+}
+.tpl-presenter-mode-reveal .cover-slide .kicker {
+  margin-bottom: 28px;
+}
+.tpl-presenter-mode-reveal .cover-slide .h1 {
+  margin-top: 0;
+  margin-bottom: 40px;
+}
+.tpl-presenter-mode-reveal .cover-slide .cover-byline {
+  margin-top: 0;
+}
+.tpl-presenter-mode-reveal .cover-slide .lede {
+  margin-top: 62px;
+  max-width: 30em;
+  line-height: 1.72;
+}
+
+/* —— 议程 —— */
 .tpl-presenter-mode-reveal .agenda-row {
   display: flex;
   gap: 18px;
@@ -54,29 +77,31 @@
   flex-shrink: 0;
   width: 2em;
   font-family: var(--font-mono, monospace);
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 700;
   color: var(--accent);
   letter-spacing: 0.06em;
   padding-top: 2px;
 }
 .tpl-presenter-mode-reveal .agenda-row .t {
-  font-size: 21px;
+  font-size: 19px;
   color: var(--text-2);
   line-height: 1.45;
   font-weight: 500;
 }
 
+/* —— 对比卡片 —— */
 .tpl-presenter-mode-reveal .compare {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  gap: 22px;
   margin-top: 22px;
 }
 .tpl-presenter-mode-reveal .compare .col {
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 20px 22px;
+  min-height: 0;
+  padding: 30px 32px;
   background: var(--surface);
 }
 .tpl-presenter-mode-reveal .compare .col.bad {
@@ -86,8 +111,8 @@
   border-top: 4px solid var(--good);
 }
 .tpl-presenter-mode-reveal .compare h5 {
-  margin: 0 0 12px;
-  font-size: 18px;
+  margin: 0 0 16px;
+  font-size: 29px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   font-family: var(--font-mono, monospace);
@@ -100,40 +125,43 @@
 }
 .tpl-presenter-mode-reveal .compare ul {
   margin: 0;
-  padding-left: 20px;
+  padding-left: 24px;
 }
 .tpl-presenter-mode-reveal .compare li {
-  font-size: 18.5px;
+  font-size: 27px;
   color: var(--text-2);
   line-height: 1.58;
-  margin-bottom: 9px;
+  margin-bottom: 10px;
 }
 
+/* —— 引用块 —— */
 .tpl-presenter-mode-reveal .quote-block {
   border-left: 4px solid var(--accent);
-  padding: 16px 24px;
+  padding: 22px 30px;
   margin-top: 28px;
   background: var(--surface-2);
   border-radius: 0 12px 12px 0;
 }
 .tpl-presenter-mode-reveal .quote-block p {
   margin: 0;
-  font-size: 22px;
-  line-height: 1.58;
+  font-size: 34px;
+  line-height: 1.5;
   color: var(--text-1);
   font-weight: 500;
 }
 
+/* —— 列表卡片 —— */
 .tpl-presenter-mode-reveal .list-card {
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 22px 24px;
+  min-height: 0;
+  padding: 32px 34px;
   background: var(--surface);
   height: 100%;
 }
 .tpl-presenter-mode-reveal .list-card h4 {
-  margin: 0 0 12px;
-  font-size: 22px;
+  margin: 0 0 18px;
+  font-size: 30px;
   color: var(--text-1);
 }
 .tpl-presenter-mode-reveal .list-card ul {
@@ -142,11 +170,11 @@
   list-style: none;
 }
 .tpl-presenter-mode-reveal .list-card li {
-  font-size: 18.5px;
+  font-size: 28px;
   color: var(--text-2);
   line-height: 1.58;
-  padding-left: 18px;
-  margin-bottom: 9px;
+  padding-left: 26px;
+  margin-bottom: 12px;
   position: relative;
 }
 .tpl-presenter-mode-reveal .list-card li::before {
@@ -157,10 +185,12 @@
   font-weight: 700;
 }
 
+/* —— 三步卡片（对齐 .card 字号）—— */
 .tpl-presenter-mode-reveal .step-card {
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 20px 22px;
+  min-height: 0;
+  padding: 32px 32px;
   background: var(--surface);
   border-top: 4px solid var(--accent);
   height: 100%;
@@ -171,23 +201,24 @@
   font-weight: 700;
   color: var(--accent);
   letter-spacing: 0.08em;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 .tpl-presenter-mode-reveal .step-card h4 {
-  margin: 0 0 10px;
-  font-size: 23px;
+  margin: 0 0 14px;
+  font-size: 31px;
+  line-height: 1.35;
   color: var(--text-1);
 }
 .tpl-presenter-mode-reveal .step-card p {
   margin: 0;
-  font-size: 18px;
+  font-size: 29px;
+  line-height: 1.58;
   color: var(--text-2);
-  line-height: 1.56;
 }
 
 .tpl-presenter-mode-reveal .grid.g3narrow {
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  gap: 22px;
 }
 @media (max-width: 1200px) {
   .tpl-presenter-mode-reveal .grid.g3narrow {
@@ -195,24 +226,12 @@
   }
 }
 
-.tpl-presenter-mode-reveal .template-block {
-  font-family: var(--font-mono, monospace);
-  font-size: 13px;
-  line-height: 1.7;
-  color: var(--text-2);
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 18px 22px;
-  margin-top: 18px;
-  white-space: pre-wrap;
-}
-
+/* —— Prompt 示例 —— */
 .tpl-presenter-mode-reveal .prompt-box {
   border-radius: 10px;
-  padding: 16px 20px;
-  font-size: 15.5px;
-  line-height: 1.62;
+  padding: 22px 26px;
+  font-size: 24px;
+  line-height: 1.58;
   margin-top: 14px;
 }
 .tpl-presenter-mode-reveal .prompt-box.bad {
@@ -227,10 +246,10 @@
 }
 .tpl-presenter-mode-reveal .prompt-label {
   font-family: var(--font-mono, monospace);
-  font-size: 12px;
+  font-size: 15px;
   font-weight: 700;
   letter-spacing: 0.06em;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   display: block;
 }
 .tpl-presenter-mode-reveal .prompt-box.bad .prompt-label {
@@ -240,12 +259,13 @@
   color: var(--good);
 }
 
+/* —— 演讲提示 / 页边距 —— */
 .tpl-presenter-mode-reveal .speaker-cue {
   position: absolute;
-  bottom: 22px;
-  left: 80px;
-  right: 80px;
-  font-size: 11.5px;
+  bottom: 28px;
+  left: 88px;
+  right: 88px;
+  font-size: 20px;
   font-family: var(--font-mono, monospace);
   color: var(--text-3);
   letter-spacing: 0.04em;
@@ -253,7 +273,7 @@
   opacity: 0.65;
   pointer-events: none;
   margin: 0;
-  line-height: 1.5;
+  line-height: 1.55;
 }
 .tpl-presenter-mode-reveal .speaker-cue::before {
   content: "▸";
@@ -266,10 +286,11 @@
 }
 
 .tpl-presenter-mode-reveal .slide {
-  padding: 52px 72px;
+  justify-content: flex-start;
+  padding: 34px 64px 78px;
 }
 .tpl-presenter-mode-reveal .slide:has(.deck-footer) .speaker-cue {
-  bottom: 56px;
+  bottom: 62px;
 }
 
 .tpl-presenter-mode-reveal .badge-row {
@@ -282,27 +303,28 @@
   font-size: 13px;
 }
 
+/* —— 案例辅助 —— */
 .tpl-presenter-mode-reveal .case-source {
   display: inline-flex;
   align-items: center;
   width: fit-content;
-  margin: 10px 0 0;
-  padding: 6px 12px;
+  margin: 12px 0 4px;
+  padding: 8px 16px;
   border: 1px solid var(--border);
   border-radius: 999px;
   background: var(--surface-2);
   color: var(--text-2);
-  font-size: 15.5px;
+  font-size: 20px;
   font-weight: 600;
   line-height: 1.35;
 }
 
 .tpl-presenter-mode-reveal .case-scenario {
-  font-size: 16px;
+  font-size: 26px;
   color: var(--text-2);
   line-height: 1.55;
   margin-top: 14px;
-  padding: 12px 16px;
+  padding: 18px 22px;
   background: var(--surface-2);
   border-radius: 8px;
   border-left: 3px solid var(--accent);
@@ -310,8 +332,9 @@
 .tpl-presenter-mode-reveal .case-scenario strong {
   color: var(--text-1);
 }
+
 .tpl-presenter-mode-reveal .example-script {
-  font-size: 14px;
+  font-size: 24px;
   line-height: 1.58;
   color: var(--text-2);
   margin-top: 12px;
@@ -321,19 +344,21 @@
   margin-top: 0;
 }
 .tpl-presenter-mode-reveal .compare.compact .col {
-  padding: 16px 18px;
+  min-height: 0;
+  padding: 26px 28px;
 }
 .tpl-presenter-mode-reveal .compare.compact h5 {
-  margin-bottom: 10px;
-  font-size: 14px;
+  margin-bottom: 12px;
+  font-size: 26px;
 }
+
 .tpl-presenter-mode-reveal .example-script .tag {
   display: inline-block;
   font-family: var(--font-mono, monospace);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.04em;
-  padding: 1px 6px;
+  padding: 2px 7px;
   border-radius: 4px;
   margin-right: 4px;
   vertical-align: baseline;
@@ -355,13 +380,13 @@
   border: 1px solid var(--border);
   border-top: 4px solid var(--good);
   border-radius: 12px;
-  padding: 16px 18px;
+  padding: 26px 28px;
   background: var(--surface);
   margin-top: 14px;
 }
 .tpl-presenter-mode-reveal .example-good-panel h5 {
-  margin: 0 0 10px;
-  font-size: 14px;
+  margin: 0 0 12px;
+  font-size: 26px;
   font-family: var(--font-mono, monospace);
   color: var(--good);
   letter-spacing: 0.04em;
@@ -371,21 +396,72 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 14px;
   flex-wrap: wrap;
   margin-top: 28px;
 }
 .tpl-presenter-mode-reveal .culture-steps .step-pill {
-  padding: 14px 22px;
+  padding: 16px 26px;
   border-radius: 999px;
   border: 2px solid var(--accent);
   background: var(--surface);
-  font-size: 20px;
+  font-size: 28px;
   font-weight: 600;
   color: var(--text-1);
 }
 .tpl-presenter-mode-reveal .culture-steps .arrow {
-  font-size: 20px;
+  font-size: 28px;
   color: var(--accent);
   font-weight: 700;
+}
+
+/* 中等密度：结构说明卡片略紧凑，正文页不显得空 */
+.tpl-presenter-mode-reveal .slide[data-title="第二步：过程和原因"] .list-card {
+  min-height: 0;
+  padding: 22px 26px;
+}
+.tpl-presenter-mode-reveal .slide[data-title="第二步：过程和原因"] .list-card h4 {
+  font-size: 26px;
+  margin-bottom: 12px;
+}
+.tpl-presenter-mode-reveal .slide[data-title="第二步：过程和原因"] .list-card li {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+.tpl-presenter-mode-reveal .slide[data-title="第二步：过程和原因"] .compare {
+  margin-top: 18px;
+}
+.tpl-presenter-mode-reveal .slide[data-title="第二步：过程和原因"] .compare .col {
+  padding: 24px 28px;
+}
+
+.tpl-presenter-mode-reveal .slide[data-title="AI 时代"] .step-card {
+  padding: 24px 26px;
+}
+.tpl-presenter-mode-reveal .slide[data-title="AI 时代"] .step-card h4 {
+  font-size: 27px;
+  margin-bottom: 10px;
+}
+.tpl-presenter-mode-reveal .slide[data-title="AI 时代"] .step-card p {
+  font-size: 24px;
+}
+.tpl-presenter-mode-reveal .slide[data-title="AI 时代"] .prompt-box {
+  font-size: 22px;
+  padding: 18px 22px;
+}
+
+.tpl-presenter-mode-reveal .slide[data-title="完整案例 · 反例"] .quote-block {
+  margin-top: 22px;
+}
+.tpl-presenter-mode-reveal .slide[data-title="完整案例 · 反例"] .quote-block p {
+  font-size: 29px;
+}
+
+.tpl-presenter-mode-reveal .slide[data-title="完整案例 · 正例"] .example-script {
+  font-size: 23px;
+  line-height: 1.55;
+}
+
+.tpl-presenter-mode-reveal .slide[data-title="完整案例 · 正例"] .quote-block p {
+  font-size: 29px;
 }
