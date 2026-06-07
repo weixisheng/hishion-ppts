@@ -947,6 +947,23 @@ ul { margin: 0; padding: 0; list-style: none; }
   transform: translate(2px, -2px);
 }
 
+.ref-chip-note {
+  cursor: default;
+  border-style: dashed;
+  color: var(--fg-3);
+  background: transparent;
+}
+
+.ref-chip-note::before {
+  content: none;
+}
+
+.ref-chip-note:hover {
+  border-color: var(--border-2);
+  color: var(--fg-3);
+  background: transparent;
+}
+
 /* ─── 问题 / 对策 双列 ─── */
 .qa-pair {
   display: grid;
